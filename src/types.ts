@@ -1,0 +1,42 @@
+export type ThemeId = 'flash_sale' | 'clean_pastel' | 'modern_tech' | 'warm_home';
+
+export type LayoutVariant =
+  | 'card_center'
+  | 'split_top'
+  | 'floating_badge'
+  | 'feature_carousel';
+
+export interface CaptionWord {
+  word: string;
+  start: number;
+  end: number;
+}
+
+export interface CaptionLine {
+  start: number;
+  end: number;
+  text: string;
+  words: CaptionWord[];
+}
+
+export type ProductClipProps = {
+  no: string;
+  productName: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  discountPercent?: number;
+  hookText: string;
+  problemText?: string;
+  keyPoints: string[];
+  ctaText: string;
+  dmKeyword?: string;
+  brandHandle?: string;
+  themeId: ThemeId;
+  layoutVariant: LayoutVariant;
+  images: string[];
+  voiceoverFile: string;
+  captions: CaptionLine[];
+  durationInSec: number;
+  enableSfx?: boolean;
+}

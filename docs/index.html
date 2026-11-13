@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Affiliate Motion — รวมพิกัด Shopee ของแท้</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg: #0b1221; --card: #111c33; --border: #1e293b; --accent: #ee4d2d; --text: #f8fafc; --muted: #94a3b8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Prompt', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px 14px 48px; }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 18px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    p { font-size: 13px; color: var(--muted); margin: 0; }
+    .search { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 15px; font-family: inherit; margin: 14px 0 16px; outline: none; }
+    .search:focus { border-color: var(--accent); }
+    .list { display: flex; flex-direction: column; gap: 10px; }
+    .item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; text-decoration: none; color: inherit; transition: transform .15s, border-color .15s; }
+    .item:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .no { background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; padding: 6px 10px; border-radius: 10px; white-space: nowrap; }
+    .info { flex: 1; min-width: 0; }
+    .name { font-size: 14px; font-weight: 600; line-height: 1.35; }
+    .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .price { font-weight: 700; color: #ffd426; font-size: 15px; white-space: nowrap; }
+    .empty { text-align: center; color: var(--muted); font-size: 14px; padding: 28px 0; display: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🛒 Affiliate Motion</h1>
+      <p>พิมพ์รหัสสินค้า (เช่น 127) หรือชื่อสินค้าเพื่อเปิดลิงก์ Shopee</p>
+    </header>
+    <input id="q" class="search" type="search" placeholder="ค้นหารหัส # หรือชื่อสินค้า..." autocomplete="off" />
+    <div id="list" class="list"></div>
+    <div id="empty" class="empty">ไม่พบสินค้าที่ค้นหา</div>
+  </div>
+  <script>
+    const PRODUCTS = [{"no":"127","name":"โคมไฟตั้งโต๊ะถนอมสายตา LED ปรับ 3 โทนสี","category":"ไอที / ของใช้ในบ้าน","price":249,"originalPrice":590,"affiliateLink":"https://s.shopee.co.th/example127","badge":"ลด 58%"}];
+    const q = document.getElementById('q');
+    const list = document.getElementById('list');
+    const empty = document.getElementById('empty');
+
+    function render(items) {
+      list.innerHTML = '';
+      empty.style.display = items.length ? 'none' : 'block';
+      for (const p of items) {
+        const a = document.createElement('a');
+        a.className = 'item';
+        a.href = p.affiliateLink;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.innerHTML = `
+          <span class="no">#${p.no}</span>
+          <div class="info">
+            <div class="name">${p.name}</div>
+            <div class="meta">${p.category || ''}</div>
+          </div>
+          <div class="price">฿${p.price}</div>
+        `;
+        list.appendChild(a);
+      }
+    }
+
+    q.addEventListener('input', () => {
+      const term = q.value.trim().toLowerCase().replace(/^#/, '');
+      if (!term) return render(PRODUCTS);
+      render(PRODUCTS.filter(p =>
+        String(p.no).toLowerCase().includes(term) ||
+        (p.name || '').toLowerCase().includes(term) ||
+        (p.category || '').toLowerCase().includes(term)
+      ));
+    });
+
+    render(PRODUCTS);
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+out/
+dist/
+*.log
+.DS_Store
+public/vo_*.mp3
+public/vo_*.wav
+public/*_img_*.jpg
+public/*_img_*.png
+public/*_vis_*.jpg
+public/*_vis_*.png
+.env

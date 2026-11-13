@@ -1,0 +1,41 @@
+{
+  "default_voice": "Achird",
+  "voices": {
+    "Aoede": {
+      "gender": "FEMALE",
+      "style": "สดใส ตื่นเต้น กระตือรือร้น",
+      "chirp_fallback": "th-TH-Chirp3-HD-Aoede",
+      "categories": ["ความงาม", "สกินแคร์", "เครื่องสำอาง", "แฟชั่น", "beauty", "skincare", "cosmetics", "fashion"]
+    },
+    "Leda": {
+      "gender": "FEMALE",
+      "style": "วัยรุ่น เป็นกันเอง สนุกสนาน",
+      "chirp_fallback": "th-TH-Chirp3-HD-Leda",
+      "categories": ["ไลฟ์สไตล์", "ของน่ารัก", "ของขวัญ", "เครื่องเขียน", "lifestyle", "cute"]
+    },
+    "Sulafat": {
+      "gender": "FEMALE",
+      "style": "อบอุ่น จริงใจ น่าเชื่อถือ",
+      "chirp_fallback": "th-TH-Chirp3-HD-Sulafat",
+      "categories": ["ของใช้ในบ้าน", "แม่และเด็ก", "สุขภาพ", "อาหารเสริม", "เครื่องนอน", "home", "health", "mom"]
+    },
+    "Orus": {
+      "gender": "MALE",
+      "style": "สุขุม น่าเชื่อถือ ชัดเจน",
+      "chirp_fallback": "th-TH-Chirp3-HD-Orus",
+      "categories": ["ไอที", "แก็ดเจ็ต", "เครื่องมือ", "อิเล็กทรอนิกส์", "it", "gadget", "tech", "tools"]
+    },
+    "Rasalgethi": {
+      "gender": "MALE",
+      "style": "รอบรู้ น่าฟัง อธิบายสเปกเก่ง",
+      "chirp_fallback": "th-TH-Chirp3-HD-Rasalgethi",
+      "categories": ["เครื่องใช้ไฟฟ้า", "ยานยนต์", "รีวิวสเปก", "appliances", "automotive"]
+    },
+    "Achird": {
+      "gender": "MALE",
+      "style": "เป็นกันเอง เหมือนเพื่อนบอกต่อ",
+      "chirp_fallback": "th-TH-Chirp3-HD-Achird",
+      "categories": ["ทั่วไป", "สัตว์เลี้ยง", "กีฬา", "กลางแจ้ง", "general", "pets", "sports"]
+    }
+  }
+}
