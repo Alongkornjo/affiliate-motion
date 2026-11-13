@@ -190,19 +190,19 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       </div>
 
-      {/* Main Content Container (Strictly within Safe Zones) */}
+      {/* Main Content Container (Strictly within Safe Zones, above Presenter Stage) */}
       <div
         style={{
           position: 'absolute',
           top: SAFE_ZONES.top + 12,
-          bottom: SAFE_ZONES.bottomCard,
+          bottom: isCta ? 595 : 580,
           left: SAFE_ZONES.left,
           right: SAFE_ZONES.right,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: 18,
+          gap: 16,
         }}
       >
         {/* Top Dynamic Headline Pill */}
@@ -327,7 +327,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             )}
           </div>
 
-          {/* Scene 2: Animated Feature Checklist Overlay below top card */}
+          {/* Scene 2: Animated Feature Checklist Overlay with Interactive Mascot Pointer */}
           {isGrid && (
             <div
               style={{
@@ -349,36 +349,37 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   <div
                     key={`kp-${idx}`}
                     style={{
+                      position: 'relative',
                       backgroundColor: isActive ? theme.primary : theme.surface,
                       color: isActive ? theme.badgeText : theme.text,
-                      border: `2px solid ${isActive ? theme.accent : theme.surfaceBorder}`,
+                      border: `2.5px solid ${isActive ? theme.accent : theme.surfaceBorder}`,
                       borderRadius: 18,
-                      padding: '14px 20px',
+                      padding: '14px 22px',
                       fontSize: 27,
                       fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 14,
                       boxShadow: isActive ? '0 10px 26px rgba(0,0,0,0.28)' : 'none',
-                      transform: `scale(${isActive ? 1.02 : 0.98})`,
+                      transform: `translateX(${isActive ? 10 : 0}px) scale(${isActive ? 1.02 : 0.98})`,
                     }}
                   >
                     <span
                       style={{
-                        width: 36,
-                        height: 36,
+                        width: 38,
+                        height: 38,
                         borderRadius: '50%',
                         backgroundColor: isActive ? theme.accent : theme.primary,
                         color: isActive ? '#111827' : theme.badgeText,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: 20,
+                        fontSize: 21,
                         fontWeight: 800,
                         flexShrink: 0,
                       }}
                     >
-                      {idx + 1}
+                      {isActive ? '👉' : idx + 1}
                     </span>
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {pt}
@@ -389,76 +390,57 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
         </div>
-
-        {/* Bottom Stage: Product Strip or Pulsing Conversion CTA */}
-        {isCta ? (
-          <div
-            style={{
-              width: '100%',
-              backgroundColor: theme.surface,
-              border: `2.5px solid ${theme.primary}`,
-              borderRadius: 26,
-              padding: '16px 24px',
-              textAlign: 'center',
-              transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
-              boxShadow: '0 16px 36px rgba(0,0,0,0.28)',
-            }}
-          >
-            {props.price > 0 && (
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 16 }}>
-                {props.originalPrice && props.originalPrice > props.price && (
-                  <span style={{ fontSize: 32, color: theme.mutedText, textDecoration: 'line-through', fontWeight: 600 }}>
-                    ฿{props.originalPrice}
-                  </span>
-                )}
-                <span style={{ fontFamily: headlineFont, fontSize: 64, fontWeight: 700, color: theme.primary, lineHeight: 1.05 }}>
-                  ฿{props.price}
-                </span>
-              </div>
-            )}
-            <div
-              style={{
-                marginTop: 10,
-                background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`,
-                color: theme.badgeText,
-                padding: '13px 22px',
-                borderRadius: 999,
-                fontSize: 28,
-                fontWeight: 800,
-                boxShadow: '0 8px 20px rgba(0,0,0,0.22)',
-              }}
-            >
-              {ctaLabel}
-            </div>
-          </div>
-        ) : (
-          <div
-            style={{
-              width: '100%',
-              backgroundColor: theme.surface,
-              border: `1.5px solid ${theme.surfaceBorder}`,
-              borderRadius: 20,
-              padding: '14px 22px',
-              textAlign: 'center',
-            }}
-          >
-            <div style={{ fontSize: 29, fontWeight: 700, color: theme.text }}>
-              {props.productName}
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Signature Channel Mascot Narrator (4-Corner Dynamic Hopping + Lip-Sync) */}
+      {/* Scene 4: Pulsing Conversion CTA Button right next to Mascot's Orange Basket */}
+      {isCta && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 495,
+            left: 232,
+            right: SAFE_ZONES.right - 15,
+            zIndex: 34,
+            transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
+          }}
+        >
+          <div
+            style={{
+              background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`,
+              color: theme.badgeText,
+              padding: '15px 26px',
+              borderRadius: 999,
+              fontSize: 30,
+              fontWeight: 800,
+              textAlign: 'center',
+              boxShadow: '0 12px 28px rgba(0,0,0,0.3)',
+              border: '3px solid #FFFFFF',
+            }}
+          >
+            {ctaLabel}
+          </div>
+        </div>
+      )}
+
+      {/* Signature Channel Mascot Co-Host (Bottom-Left Presenter Stage) */}
       <MascotNarrator
         sceneIdx={sceneIdx}
+        sceneStartFrame={isHero ? 0 : isGrid ? s1End : isSpotlight ? s2End : s3End}
+        activePointIdx={activePointIdx}
         captions={props.captions}
         theme={theme}
         mascotId={props.mascotId || pickMascotByCategory(props.category)}
       />
 
-      {/* Thai Karaoke Captions */}
-      <KaraokeCaptions lines={props.captions} theme={theme} />
+      {/* Unified Presenter Speech Bubble + Thai Karaoke Captions */}
+      <KaraokeCaptions
+        lines={props.captions}
+        theme={theme}
+        sceneIdx={sceneIdx}
+        activePointIdx={activePointIdx}
+        totalPoints={Math.max(props.keyPoints.length, 1)}
+        mascotId={props.mascotId || pickMascotByCategory(props.category)}
+      />
     </AbsoluteFill>
   );
 };
