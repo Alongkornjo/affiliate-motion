@@ -20,27 +20,39 @@ const kanitFont = 'KanitLocal';
 export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const theme = THEMES[props.themeId] || THEMES.flash_sale;
+  const baseTheme = THEMES[props.themeId] || THEMES.flash_sale;
+  const theme = props.customAccent
+    ? { ...baseTheme, primary: props.customAccent }
+    : baseTheme;
 
   const images = props.images.length > 0 ? props.images : [];
-  const sceneSpan = Math.max(Math.floor(durationInFrames / Math.max(images.length, 1)), 1);
-  const currentImgIdx = Math.min(Math.floor(frame / sceneSpan), Math.max(images.length - 1, 0));
-  const currentImg = images[currentImgIdx];
+  const mainImg = images[0];
+  const sideLeftImg = images[1] || images[0];
+  const sideRightImg = images[2] || images[1] || images[0];
 
-  const hookEnd = Math.min(Math.floor(fps * 3.5), Math.floor(durationInFrames * 0.25));
-  const ctaStart = Math.max(Math.floor(durationInFrames * 0.72), hookEnd + 30);
+  // 4-Scene Commercial Timeline
+  const s1End = Math.floor(durationInFrames * 0.24); // HeroCollage
+  const s2End = Math.floor(durationInFrames * 0.56); // FeatureGrid
+  const s3End = Math.floor(durationInFrames * 0.76); // SpotlightZoom
+  // s3End -> durationInFrames: ConversionCTA
 
-  const hookSpring = spring({ frame, fps, config: { damping: 12, stiffness: 160 } });
-  const cardSpring = spring({ frame: Math.max(frame - 4, 0), fps, config: { damping: 14, stiffness: 120 } });
-  const ctaSpring = spring({ frame: Math.max(frame - ctaStart, 0), fps, config: { damping: 13, stiffness: 150 } });
+  const isHero = frame < s1End;
+  const isGrid = frame >= s1End && frame < s2End;
+  const isSpotlight = frame >= s2End && frame < s3End;
+  const isCta = frame >= s3End;
 
-  const kenBurnsScale = interpolate(
-    frame % sceneSpan,
-    [0, sceneSpan],
-    [1.0, 1.09],
-    { extrapolateRight: 'clamp' }
-  );
-  const floatY = Math.sin(frame / 18) * 6;
+  const sceneIdx = isHero ? 0 : isGrid ? 1 : isSpotlight ? 2 : 3;
+  const currentImg = images[sceneIdx % Math.max(images.length, 1)] || mainImg;
+
+  const hookSpring = spring({ frame, fps, config: { damping: 12, stiffness: 165 } });
+  const sideCardSpring = spring({ frame: Math.max(frame - 6, 0), fps, config: { damping: 13, stiffness: 130 } });
+  const ctaSpring = spring({ frame: Math.max(frame - s3End, 0), fps, config: { damping: 12, stiffness: 150 } });
+
+  const kenBurnsScale = interpolate(frame, [0, durationInFrames], [1.0, 1.12], {
+    extrapolateRight: 'clamp',
+  });
+  const floatY = Math.sin(frame / 16) * 7;
+  const ctaPulse = isCta ? 1 + Math.sin((frame - s3End) / 6) * 0.025 : 1;
   const progressPct = Math.min((frame / Math.max(durationInFrames - 1, 1)) * 100, 100);
 
   const discount =
@@ -51,7 +63,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
 
   const activePointIdx = Math.min(
     Math.floor(
-      interpolate(frame, [hookEnd, ctaStart], [0, Math.max(props.keyPoints.length, 1)], {
+      interpolate(frame, [s1End, s2End], [0, Math.max(props.keyPoints.length, 1)], {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       })
@@ -59,9 +71,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
     Math.max(props.keyPoints.length - 1, 0)
   );
 
-  const isSplitTop = props.layoutVariant === 'split_top';
-  const isFloatingBadge = props.layoutVariant === 'floating_badge';
-  const isCarousel = props.layoutVariant === 'feature_carousel';
+  const ctaLabel =
+    props.ctaMode === 'basket'
+      ? '🛒 กดตะกร้าส้มด้านล่างเลย!'
+      : props.ctaText;
 
   return (
     <AbsoluteFill
@@ -77,31 +90,31 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         @font-face { font-family: 'PromptLocal'; src: url('${staticFile('fonts/Prompt-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
         @font-face { font-family: 'KanitLocal'; src: url('${staticFile('fonts/Kanit-ExtraBold.ttf')}') format('truetype'); font-weight: 800; font-style: normal; }
       `}</style>
+
       {/* Voiceover Track */}
       {props.voiceoverFile && <Audio src={staticFile(props.voiceoverFile)} />}
 
-      {/* Procedural SFX Tracks */}
+      {/* Procedural SFX Tracks synced to 4 Scenes */}
       {props.enableSfx !== false && (
         <>
           <Sequence from={2} durationInFrames={18}>
             <Audio src={staticFile('sfx/pop.wav')} volume={0.22} />
           </Sequence>
-          {hookEnd > 20 && (
-            <Sequence from={hookEnd} durationInFrames={20}>
-              <Audio src={staticFile('sfx/whoosh.wav')} volume={0.18} />
-            </Sequence>
-          )}
+          <Sequence from={Math.max(s1End, 15)} durationInFrames={20}>
+            <Audio src={staticFile('sfx/whoosh.wav')} volume={0.18} />
+          </Sequence>
           {props.keyPoints.slice(0, 3).map((_, idx) => {
-            const ptFrame = Math.floor(
-              hookEnd + ((ctaStart - hookEnd) * idx) / Math.max(props.keyPoints.length, 1)
-            );
+            const ptFrame = Math.floor(s1End + ((s2End - s1End) * idx) / Math.max(props.keyPoints.length, 1));
             return (
-              <Sequence key={`sfx-pt-${idx}`} from={Math.max(ptFrame, 10)} durationInFrames={24}>
+              <Sequence key={`sfx-pt-${idx}`} from={Math.max(ptFrame, 12)} durationInFrames={24}>
                 <Audio src={staticFile('sfx/ding.wav')} volume={0.16} />
               </Sequence>
             );
           })}
-          <Sequence from={ctaStart} durationInFrames={25}>
+          <Sequence from={Math.max(s2End, 30)} durationInFrames={20}>
+            <Audio src={staticFile('sfx/whoosh.wav')} volume={0.18} />
+          </Sequence>
+          <Sequence from={Math.max(s3End, 45)} durationInFrames={28}>
             <Audio src={staticFile('sfx/sparkle.wav')} volume={0.22} />
           </Sequence>
         </>
@@ -111,27 +124,27 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       <div
         style={{
           position: 'absolute',
-          top: 120 + Math.sin(frame / 28) * 30,
-          left: -120,
-          width: 480,
-          height: 480,
+          top: 110 + Math.sin(frame / 26) * 32,
+          left: -130,
+          width: 500,
+          height: 500,
           borderRadius: '50%',
           background: theme.primary,
-          opacity: theme.isDark ? 0.14 : 0.12,
-          filter: 'blur(90px)',
+          opacity: theme.isDark ? 0.16 : 0.13,
+          filter: 'blur(95px)',
         }}
       />
       <div
         style={{
           position: 'absolute',
-          bottom: 260 + Math.cos(frame / 24) * 25,
-          right: -100,
-          width: 420,
-          height: 420,
+          bottom: 240 + Math.cos(frame / 22) * 28,
+          right: -110,
+          width: 440,
+          height: 440,
           borderRadius: '50%',
           background: theme.accent,
-          opacity: theme.isDark ? 0.12 : 0.1,
-          filter: 'blur(90px)',
+          opacity: theme.isDark ? 0.14 : 0.11,
+          filter: 'blur(95px)',
         }}
       />
 
@@ -152,7 +165,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top - 50,
+          top: SAFE_ZONES.top - 52,
           left: SAFE_ZONES.left,
           right: SAFE_ZONES.right,
           display: 'flex',
@@ -161,14 +174,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           zIndex: 20,
         }}
       >
-        <div
-          style={{
-            fontSize: 26,
-            fontWeight: 700,
-            color: theme.mutedText,
-            letterSpacing: 0.3,
-          }}
-        >
+        <div style={{ fontSize: 25, fontWeight: 700, color: theme.mutedText }}>
           {props.brandHandle || '@AffiliateMotion'}
         </div>
         <div
@@ -176,13 +182,13 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             backgroundColor: theme.surface,
             border: `1.5px solid ${theme.surfaceBorder}`,
             color: theme.text,
-            padding: '8px 18px',
+            padding: '7px 16px',
             borderRadius: 999,
-            fontSize: 22,
+            fontSize: 21,
             fontWeight: 600,
           }}
         >
-          {props.category}
+          ✨ ของแท้ · {props.category}
         </div>
       </div>
 
@@ -190,205 +196,256 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top + 16,
+          top: SAFE_ZONES.top + 12,
           bottom: SAFE_ZONES.bottomCard,
           left: SAFE_ZONES.left,
           right: SAFE_ZONES.right,
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: isSplitTop ? 'flex-start' : 'space-between',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          gap: 20,
+          gap: 18,
         }}
       >
-        {/* Top Hook / Scene Headline Banner */}
+        {/* Top Dynamic Headline Pill */}
         <div
           style={{
-            transform: `scale(${interpolate(hookSpring, [0, 1], [0.85, 1])})`,
-            backgroundColor: frame < hookEnd ? theme.primary : theme.surface,
-            border: `2px solid ${frame < hookEnd ? theme.primary : theme.surfaceBorder}`,
-            color: frame < hookEnd ? theme.badgeText : theme.text,
-            padding: '16px 28px',
+            transform: `scale(${interpolate(hookSpring, [0, 1], [0.88, 1])})`,
+            backgroundColor: isHero ? theme.primary : theme.surface,
+            border: `2px solid ${isHero ? theme.primary : theme.surfaceBorder}`,
+            color: isHero ? theme.badgeText : theme.text,
+            padding: '15px 26px',
             borderRadius: 22,
             textAlign: 'center',
             boxShadow: '0 12px 30px rgba(0,0,0,0.22)',
             width: '100%',
           }}
         >
-          <div
-            style={{
-              fontFamily: kanitFont,
-              fontSize: 42,
-              fontWeight: 800,
-              lineHeight: 1.2,
-            }}
-          >
-            {frame < hookEnd
+          <div style={{ fontFamily: kanitFont, fontSize: 40, fontWeight: 800, lineHeight: 1.2 }}>
+            {isHero
               ? props.hookText
-              : frame >= ctaStart
-              ? 'รีบกดก่อนหมดโปร!'
-              : props.keyPoints[activePointIdx] || props.productName}
+              : isGrid
+              ? 'ทำไมตัวนี้ถึงขายดี?'
+              : isSpotlight
+              ? props.productName
+              : 'รีบกดก่อนหมดโปร!'}
           </div>
         </div>
 
-        {/* Product Visual Showcase Card */}
+        {/* Center Visual Stage: Hero Collage vs Feature Grid vs Spotlight */}
         <div
           style={{
             position: 'relative',
             width: '100%',
             flex: 1,
-            minHeight: 460,
-            maxHeight: 680,
-            borderRadius: 32,
-            overflow: 'hidden',
-            backgroundColor: theme.surface,
-            border: `3px solid ${theme.surfaceBorder}`,
-            boxShadow: '0 22px 50px rgba(0, 0, 0, 0.28)',
-            transform: `translateY(${isFloatingBadge ? floatY : 0}px) scale(${interpolate(
-              cardSpring,
-              [0, 1],
-              [0.92, 1]
-            )})`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          {currentImg && (
-            <Img
-              src={staticFile(currentImg)}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transform: `scale(${kenBurnsScale})`,
-              }}
-            />
+          {/* Scene 1: Tilted Side Collage Cards behind Main Card */}
+          {isHero && images.length > 1 && (
+            <>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: -8,
+                  width: 240,
+                  height: 300,
+                  borderRadius: 24,
+                  overflow: 'hidden',
+                  border: `3px solid ${theme.surfaceBorder}`,
+                  boxShadow: '0 14px 32px rgba(0,0,0,0.28)',
+                  transform: `rotate(-8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
+                  zIndex: 5,
+                }}
+              >
+                <Img src={staticFile(sideLeftImg)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div
+                style={{
+                  position: 'absolute',
+                  right: -8,
+                  width: 240,
+                  height: 300,
+                  borderRadius: 24,
+                  overflow: 'hidden',
+                  border: `3px solid ${theme.surfaceBorder}`,
+                  boxShadow: '0 14px 32px rgba(0,0,0,0.28)',
+                  transform: `rotate(8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
+                  zIndex: 5,
+                }}
+              >
+                <Img src={staticFile(sideRightImg)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            </>
           )}
 
-          {/* Product Number Badge (#NO) */}
+          {/* Main Center Product Frame */}
           <div
             style={{
-              position: 'absolute',
-              top: 22,
-              left: 22,
-              backgroundColor: theme.primary,
-              color: theme.badgeText,
-              padding: '10px 22px',
-              borderRadius: 999,
-              fontSize: 30,
-              fontWeight: 800,
-              boxShadow: '0 6px 18px rgba(0,0,0,0.28)',
+              position: 'relative',
+              width: isHero && images.length > 1 ? '76%' : '100%',
+              height: isGrid ? '56%' : '100%',
+              alignSelf: isGrid ? 'flex-start' : 'center',
+              borderRadius: 30,
+              overflow: 'hidden',
+              backgroundColor: theme.surface,
+              border: `3px solid ${theme.surfaceBorder}`,
+              boxShadow: '0 24px 52px rgba(0, 0, 0, 0.32)',
+              transform: `translateY(${floatY}px)`,
+              zIndex: 10,
             }}
           >
-            #{props.no}
-          </div>
+            {currentImg && (
+              <Img
+                src={staticFile(currentImg)}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  transform: `scale(${isSpotlight ? kenBurnsScale * 1.08 : kenBurnsScale})`,
+                }}
+              />
+            )}
 
-          {/* Discount Badge */}
-          {discount > 0 && (
             <div
               style={{
                 position: 'absolute',
-                top: 22,
-                right: 22,
-                backgroundColor: theme.accent,
-                color: '#111827',
-                padding: '10px 22px',
+                top: 20,
+                left: 20,
+                backgroundColor: theme.primary,
+                color: theme.badgeText,
+                padding: '8px 20px',
                 borderRadius: 999,
                 fontSize: 28,
                 fontWeight: 800,
-                boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
+                boxShadow: '0 6px 18px rgba(0,0,0,0.28)',
               }}
             >
-              ลด {discount}%
+              #{props.no}
             </div>
-          )}
 
-          {/* Multi-image Thumbnail Strip (for Carousel or multi-angle) */}
-          {isCarousel && images.length > 1 && (
+            {discount > 0 && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 20,
+                  right: 20,
+                  backgroundColor: theme.accent,
+                  color: '#111827',
+                  padding: '8px 20px',
+                  borderRadius: 999,
+                  fontSize: 26,
+                  fontWeight: 800,
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
+                }}
+              >
+                ลด {discount}%
+              </div>
+            )}
+          </div>
+
+          {/* Scene 2: Animated Feature Checklist Overlay below top card */}
+          {isGrid && (
             <div
               style={{
                 position: 'absolute',
-                bottom: 18,
-                left: 18,
-                right: 18,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '41%',
                 display: 'flex',
-                gap: 12,
+                flexDirection: 'column',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(0,0,0,0.55)',
-                padding: 10,
-                borderRadius: 18,
+                gap: 12,
+                zIndex: 12,
               }}
             >
-              {images.slice(0, 4).map((img, i) => (
-                <div
-                  key={`thumb-${i}`}
-                  style={{
-                    width: 82,
-                    height: 82,
-                    borderRadius: 12,
-                    overflow: 'hidden',
-                    border: i === currentImgIdx ? `3px solid ${theme.accent}` : '2px solid rgba(255,255,255,0.35)',
-                  }}
-                >
-                  <Img src={staticFile(img)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-              ))}
+              {props.keyPoints.slice(0, 3).map((pt, idx) => {
+                const isActive = idx === activePointIdx;
+                return (
+                  <div
+                    key={`kp-${idx}`}
+                    style={{
+                      backgroundColor: isActive ? theme.primary : theme.surface,
+                      color: isActive ? theme.badgeText : theme.text,
+                      border: `2px solid ${isActive ? theme.accent : theme.surfaceBorder}`,
+                      borderRadius: 18,
+                      padding: '14px 20px',
+                      fontSize: 27,
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 14,
+                      boxShadow: isActive ? '0 10px 26px rgba(0,0,0,0.28)' : 'none',
+                      transform: `scale(${isActive ? 1.02 : 0.98})`,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: '50%',
+                        backgroundColor: isActive ? theme.accent : theme.primary,
+                        color: isActive ? '#111827' : theme.badgeText,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 20,
+                        fontWeight: 800,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {idx + 1}
+                    </span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {pt}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
 
-        {/* Bottom Feature Strip / PriceTag CTA */}
-        {frame >= ctaStart ? (
+        {/* Bottom Stage: Product Strip or Pulsing Conversion CTA */}
+        {isCta ? (
           <div
             style={{
               width: '100%',
               backgroundColor: theme.surface,
               border: `2.5px solid ${theme.primary}`,
-              borderRadius: 24,
-              padding: '18px 26px',
+              borderRadius: 26,
+              padding: '16px 24px',
               textAlign: 'center',
-              transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1])})`,
-              boxShadow: '0 14px 32px rgba(0,0,0,0.25)',
+              transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
+              boxShadow: '0 16px 36px rgba(0,0,0,0.28)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 18 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 16 }}>
               {props.originalPrice && props.originalPrice > props.price && (
-                <span
-                  style={{
-                    fontSize: 34,
-                    color: theme.mutedText,
-                    textDecoration: 'line-through',
-                    fontWeight: 600,
-                  }}
-                >
+                <span style={{ fontSize: 32, color: theme.mutedText, textDecoration: 'line-through', fontWeight: 600 }}>
                   ฿{props.originalPrice}
                 </span>
               )}
-              <span
-                style={{
-                  fontFamily: kanitFont,
-                  fontSize: 64,
-                  fontWeight: 800,
-                  color: theme.primary,
-                  lineHeight: 1.05,
-                }}
-              >
+              <span style={{ fontFamily: kanitFont, fontSize: 64, fontWeight: 800, color: theme.primary, lineHeight: 1.05 }}>
                 ฿{props.price}
               </span>
             </div>
             <div
               style={{
                 marginTop: 10,
-                backgroundColor: theme.primary,
+                background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`,
                 color: theme.badgeText,
-                padding: '12px 20px',
+                padding: '13px 22px',
                 borderRadius: 999,
                 fontSize: 28,
-                fontWeight: 700,
+                fontWeight: 800,
+                boxShadow: '0 8px 20px rgba(0,0,0,0.22)',
               }}
             >
-              {props.ctaText}
+              {ctaLabel}
             </div>
           </div>
         ) : (
@@ -399,23 +456,17 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               border: `1.5px solid ${theme.surfaceBorder}`,
               borderRadius: 20,
               padding: '14px 22px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 6,
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 30, fontWeight: 700, color: theme.text }}>
+            <div style={{ fontSize: 29, fontWeight: 700, color: theme.text }}>
               {props.productName}
-            </div>
-            <div style={{ fontSize: 24, fontWeight: 500, color: theme.mutedText }}>
-              {props.problemText || props.keyPoints[0] || ''}
             </div>
           </div>
         )}
       </div>
 
-      {/* Thai Karaoke Captions (Word-level highlighted, natural Thai spacing) */}
+      {/* Thai Karaoke Captions */}
       <KaraokeCaptions lines={props.captions} theme={theme} />
     </AbsoluteFill>
   );

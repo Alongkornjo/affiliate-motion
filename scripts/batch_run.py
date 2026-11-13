@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Batch runner for Affiliate Motion: takes product JSON(s) and runs
-visual_prep -> voiceover -> captions -> remotion render -> qa_check."""
+"""Fast batch runner for Affiliate Motion:
+Pre-bundles Remotion once, renders 9:16 MP4 with multi-core concurrency,
+generates cover thumbnail (#NO_cover.jpg), and runs automated QA."""
 
 import argparse
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -18,7 +18,18 @@ def run(cmd: list[str], cwd: Path = ROOT) -> str:
     return res.stdout.strip()
 
 
-def process_product(product_path: Path, idx: int, tier: str = "short"):
+def ensure_bundle(bundle_dir: Path) -> Path:
+    if not (bundle_dir / "index.html").exists():
+        run(["npx", "remotion", "bundle", "src/index.ts", "--out-dir", str(bundle_dir)])
+    return bundle_dir
+
+
+def sync_public_to_bundle(bundle_dir: Path):
+    import shutil
+    shutil.copytree(ROOT / "public", bundle_dir / "public", dirs_exist_ok=True)
+
+
+def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, cta_mode: str):
     product = json.loads(product_path.read_text(encoding="utf-8"))
     no = str(product["no"])
     narration = product.get(f"narration_{tier}") or product.get("narration_short") or ""
@@ -28,8 +39,9 @@ def process_product(product_path: Path, idx: int, tier: str = "short"):
     theme_id = product.get("themeId") or THEMES[idx % len(THEMES)]
     layout_variant = product.get("layoutVariant") or LAYOUTS[idx % len(LAYOUTS)]
 
-    # 1. Visual Prep
+    # 1. Visual Prep + dominant color extraction
     images = []
+    custom_accent = None
     raw_images = product.get("raw_images", [])
     for img_idx, raw_img in enumerate(raw_images, start=1):
         out_json = run([
@@ -39,7 +51,10 @@ def process_product(product_path: Path, idx: int, tier: str = "short"):
             "--prefix", f"{no}_vis_{img_idx}",
             *(["--crops"] if len(raw_images) == 1 else []),
         ])
-        images.extend(json.loads(out_json)["files"])
+        vis = json.loads(out_json)
+        images.extend(vis["files"])
+        if img_idx == 1 and product.get("use_auto_accent"):
+            custom_accent = vis.get("accent_hex")
 
     # 2. Voiceover
     vo_rel = f"vo_{no}_{tier}.mp3"
@@ -52,7 +67,7 @@ def process_product(product_path: Path, idx: int, tier: str = "short"):
         "--out", vo_out,
     ])
 
-    # 3. Captions
+    # 3. Captions (Anchor-word STT alignment)
     cap_path = ROOT / "data" / f"captions_{no}_{tier}.json"
     run([
         "uv", "run", "--with", "google-auth", "--with", "requests",
@@ -75,10 +90,12 @@ def process_product(product_path: Path, idx: int, tier: str = "short"):
         "problemText": product.get("target_pain", ""),
         "keyPoints": product.get("key_points", []),
         "ctaText": product.get("cta_text", f'กดลิงก์ในไบโอ เลข #{no} · หรือเม้น "{product.get("dm_keyword", "เอา")}"'),
+        "ctaMode": cta_mode,
         "dmKeyword": product.get("dm_keyword", "เอา"),
         "brandHandle": product.get("brand_handle", "@AffiliateMotion"),
         "themeId": theme_id,
         "layoutVariant": layout_variant,
+        "customAccent": custom_accent,
         "images": images,
         "voiceoverFile": vo_rel,
         "captions": caps["lines"],
@@ -87,32 +104,50 @@ def process_product(product_path: Path, idx: int, tier: str = "short"):
     }
     props_path.write_text(json.dumps(props, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # 5. Remotion Render
+    # Sync newly generated visuals & voiceover into pre-built bundle
+    sync_public_to_bundle(bundle_dir)
+
+    # 5. Fast Remotion Render using pre-built bundle + 100% concurrency
     mp4_path = ROOT / "out" / f"#{no}_{tier}.mp4"
     run([
-        "npx", "remotion", "render", "src/index.ts", "ProductClip",
+        "npx", "remotion", "render", str(bundle_dir), "ProductClip",
         str(mp4_path),
+        f"--props={props_path}",
+        "--concurrency=100%",
+        "--browser-executable=/usr/bin/chromium",
+    ])
+
+    # 6. Auto Cover Thumbnail
+    cover_path = ROOT / "out" / f"#{no}_cover.jpg"
+    run([
+        "npx", "remotion", "still", str(bundle_dir), "ProductClip",
+        str(cover_path),
+        "--frame=18",
         f"--props={props_path}",
         "--browser-executable=/usr/bin/chromium",
     ])
 
-    # 6. QA Check
+    # 7. QA Check
     qa_out = run([
         "python3", "scripts/qa_check.py",
         "--video", str(mp4_path),
         "--tier", tier,
+        "--frames-dir", "/tmp/qa_frames_v2",
     ])
     print(qa_out)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run Affiliate Motion pipeline for product JSON(s)")
+    parser = argparse.ArgumentParser(description="Fast batch runner for Affiliate Motion")
     parser.add_argument("products", nargs="+", help="Path(s) to product_<NO>.json")
     parser.add_argument("--tier", choices=["short", "long"], default="short")
+    parser.add_argument("--cta-mode", choices=["bio", "basket"], default="bio")
+    parser.add_argument("--bundle-dir", default="/tmp/remotion_bundle")
     args = parser.parse_args()
 
+    bundle_dir = ensure_bundle(Path(args.bundle_dir))
     for idx, p in enumerate(args.products):
-        process_product(Path(p), idx, tier=args.tier)
+        process_product(Path(p), idx, args.tier, bundle_dir, args.cta_mode)
 
 
 if __name__ == "__main__":

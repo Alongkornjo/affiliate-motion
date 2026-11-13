@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate word-level Thai karaoke captions using Google Cloud Speech-to-Text
-time offsets aligned to the clean original Thai script segmented with Node Intl.Segmenter('th')."""
+anchor-word alignment mapped onto the clean original Thai script segmented with Node Intl.Segmenter('th')."""
 
 import argparse
 import base64
+import difflib
 import json
 import os
 import re
@@ -94,37 +95,81 @@ def extract_stt_timings(audio_path: Path, key_path: str) -> list[dict]:
     return words
 
 
+def _word_weight(w: str) -> float:
+    return max(len(re.sub(r"[\u0e31\u0e34-\u0e3a\u0e47-\u0e4e]", "", w)), 1.5)
+
+
 def align_words_to_timings(clean_words: list[str], stt_words: list[dict], total_duration: float) -> list[dict]:
-    """Map clean Intl.Segmenter words onto the STT speech envelope so spelling is 100% accurate."""
+    """Anchor-word alignment: match clean Intl.Segmenter words against STT words via SequenceMatcher
+    so mid-sentence pauses are preserved while keeping 100% clean Thai spelling."""
     if not clean_words:
         return []
 
-    speech_start = stt_words[0]["start"] if stt_words else 0.1
-    speech_end = stt_words[-1]["end"] if stt_words else max(total_duration - 0.15, speech_start + 0.5)
-    speech_end = min(speech_end, total_duration)
+    if not stt_words:
+        # Fallback if STT returned nothing
+        span = max(total_duration - 0.2, 0.5)
+        weights = [_word_weight(w) for w in clean_words]
+        total_w = sum(weights)
+        cursor = 0.1
+        out = []
+        for w, wt in zip(clean_words, weights):
+            dur = span * (wt / total_w)
+            out.append({"word": w, "start": round(cursor, 3), "end": round(cursor + dur, 3)})
+            cursor += dur
+        return out
 
-    # Weight each word by character length (with minimum floor) for natural syllable pacing
-    weights = [max(len(re.sub(r"[\u0e31\u0e34-\u0e3a\u0e47-\u0e4e]", "", w)), 1.5) for w in clean_words]
-    total_weight = sum(weights)
+    clean_norm = [w.lower() for w in clean_words]
+    stt_norm = [w["word"].lower() for w in stt_words]
+    matcher = difflib.SequenceMatcher(None, clean_norm, stt_norm, autojunk=False)
 
-    aligned = []
-    cursor = speech_start
-    span = max(speech_end - speech_start, 0.5)
+    # Map matched clean indices to STT start/end
+    anchors: dict[int, tuple[float, float]] = {}
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            for offset in range(i2 - i1):
+                sw = stt_words[j1 + offset]
+                anchors[i1 + offset] = (sw["start"], sw["end"])
 
-    for w, wt in zip(clean_words, weights):
-        dur = span * (wt / total_weight)
-        aligned.append({
-            "word": w,
-            "start": round(cursor, 3),
-            "end": round(cursor + dur, 3),
-        })
-        cursor += dur
-    return aligned
+    # Fill gaps between anchors proportionally
+    aligned = [None] * len(clean_words)
+    for idx, (s, e) in anchors.items():
+        aligned[idx] = {"word": clean_words[idx], "start": round(s, 3), "end": round(max(e, s + 0.08), 3)}
+
+    speech_start = stt_words[0]["start"]
+    speech_end = min(stt_words[-1]["end"], total_duration)
+
+    i = 0
+    while i < len(clean_words):
+        if aligned[i] is not None:
+            i += 1
+            continue
+        gap_start = i
+        while i < len(clean_words) and aligned[i] is None:
+            i += 1
+        gap_end = i  # exclusive
+
+        t_start = aligned[gap_start - 1]["end"] if gap_start > 0 else speech_start
+        t_end = aligned[gap_end]["start"] if gap_end < len(clean_words) else speech_end
+        if t_end <= t_start:
+            t_end = t_start + 0.15 * (gap_end - gap_start)
+
+        weights = [_word_weight(clean_words[k]) for k in range(gap_start, gap_end)]
+        total_w = sum(weights) or 1.0
+        cursor = t_start
+        for k, wt in zip(range(gap_start, gap_end), weights):
+            dur = (t_end - t_start) * (wt / total_w)
+            aligned[k] = {
+                "word": clean_words[k],
+                "start": round(cursor, 3),
+                "end": round(cursor + dur, 3),
+            }
+            cursor += dur
+
+    return aligned  # type: ignore[return-value]
 
 
 def group_into_lines(aligned_words: list[dict], max_chars: int = 22) -> list[dict]:
-    """Group Thai words into readable mobile lines without breaking mid-word.
-    Tracks whether each word needs a preceding space (only for Latin/number transitions)."""
+    """Group Thai words into readable mobile lines without breaking mid-word."""
     lines = []
     current = []
     current_len = 0

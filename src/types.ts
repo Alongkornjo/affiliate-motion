@@ -6,6 +6,8 @@ export type LayoutVariant =
   | 'floating_badge'
   | 'feature_carousel';
 
+export type CtaMode = 'bio' | 'basket';
+
 export interface CaptionWord {
   word: string;
   start: number;
@@ -30,13 +32,15 @@ export type ProductClipProps = {
   problemText?: string;
   keyPoints: string[];
   ctaText: string;
+  ctaMode?: CtaMode;
   dmKeyword?: string;
   brandHandle?: string;
   themeId: ThemeId;
   layoutVariant: LayoutVariant;
+  customAccent?: string;
   images: string[];
   voiceoverFile: string;
   captions: CaptionLine[];
   durationInSec: number;
   enableSfx?: boolean;
-}
+};
