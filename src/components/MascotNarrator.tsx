@@ -4,7 +4,7 @@ import { BrandTheme } from '../themes';
 import { CaptionLine, MascotId } from '../types';
 
 interface Props {
-  sceneIdx: number; // 0: Hero, 1: Grid, 2: Spotlight, 3: CTA
+  sceneIdx: number; // 0: Hero (Full), 1: Grid (Wobble Head), 2: Spotlight (Wobble Head), 3: CTA (Full + Basket)
   sceneStartFrame?: number;
   activePointIdx?: number;
   captions: CaptionLine[];
@@ -28,7 +28,7 @@ export const MascotNarrator: React.FC<Props> = ({
   );
   const isSpeaking = Boolean(activeLine);
 
-  // 1. Scene 1 Walk-in Entrance (frames 0..24: walks in from left off-screen)
+  // Scene 1 Walk-in Entrance (frames 0..24)
   const walkProgress = spring({
     frame,
     fps,
@@ -37,46 +37,50 @@ export const MascotNarrator: React.FC<Props> = ({
   const walkX = interpolate(walkProgress, [0, 1], [-210, 0]);
   const isWalkingIn = frame < 24;
 
-  // 2. Smooth Pose Transition when scene changes (NO repeating frame % 45 reset!)
+  // Smooth transition when switching between Full-Body & Wobble-Head scenes
   const poseTransition = spring({
     frame: Math.max(frame - sceneStartFrame, 0),
     fps,
-    config: { damping: 14, stiffness: 150 },
+    config: { damping: 13, stiffness: 145 },
   });
-  const poseScale = interpolate(poseTransition, [0, 0.4, 1], [0.92, 1.04, 1.0]);
+  const poseScale = interpolate(poseTransition, [0, 0.5, 1], [0.85, 1.05, 1.0]);
 
-  // 3. Gentle, natural presenter motion (no fast jitter)
+  const isHeadMode = sceneIdx === 1 || sceneIdx === 2;
+
+  // Gentle Full-Body vs Expressive Pendulum Wobble Head Physics
   const stepY = isWalkingIn
     ? Math.abs(Math.sin(frame * 0.55)) * -14
+    : isHeadMode
+    ? Math.sin(frame / 5.5) * -5
     : isSpeaking
     ? Math.sin(frame / 5.5) * -4.5
     : Math.sin(frame / 14) * -3;
 
   const bodyTilt = isWalkingIn
     ? Math.sin(frame * 0.55) * 6
+    : isHeadMode
+    ? Math.sin(frame / 4.8) * 8.5 // Smooth ดุ๊กดิ๊ก pendulum wobble!
     : isSpeaking
     ? Math.sin(frame / 9) * 2.2
     : Math.sin(frame / 18) * 1.2;
 
-  const breatheScaleY = isSpeaking ? 1 + Math.sin(frame / 5.5) * 0.015 : 1;
+  const breatheScaleY = isHeadMode
+    ? 1 + Math.sin(frame / 4.8) * 0.025
+    : isSpeaking
+    ? 1 + Math.sin(frame / 5.5) * 0.015
+    : 1;
 
-  // 4. Pose selection per scene
-  // Scene 0: wave, Scene 1: point (flipped right toward checklist & bubble), Scene 2: love, Scene 3: basket
-  const poseMap: Record<number, { file: string; flipX?: boolean }> = {
-    0: { file: `mascot/${mascotId}/wave.png`, flipX: false },
-    1: { file: `mascot/${mascotId}/point.png`, flipX: true },
-    2: { file: `mascot/${mascotId}/love.png`, flipX: false },
-    3: { file: `mascot/${mascotId}/basket.png`, flipX: false },
-  };
-  const currentPose = poseMap[sceneIdx] || poseMap[0];
-
-  // 5. Floating Reaction Particles (gentle rising sparkles/hearts)
   const particles =
     sceneIdx === 2
       ? ['💕', '✨', '🌸']
       : sceneIdx === 3
       ? ['🛒', '✨', '🔥']
       : ['✨', '⭐'];
+
+  const fullSprite =
+    sceneIdx === 3 ? `mascot/${mascotId}/basket.png` : `mascot/${mascotId}/wave.png`;
+  const headSprite =
+    sceneIdx === 2 ? `mascot/${mascotId}/head_love.png` : `mascot/${mascotId}/head_excited.png`;
 
   return (
     <div
@@ -99,7 +103,7 @@ export const MascotNarrator: React.FC<Props> = ({
         style={{
           position: 'absolute',
           bottom: 12,
-          width: 160,
+          width: 165,
           height: 38,
           borderRadius: '50%',
           background: `radial-gradient(circle, ${theme.primary}66 0%, transparent 72%)`,
@@ -111,14 +115,14 @@ export const MascotNarrator: React.FC<Props> = ({
       {particles.map((emoji, idx) => {
         const cycle = (frame + idx * 22) % 60;
         const pY = interpolate(cycle, [0, 60], [0, -68]);
-        const pOpacity = interpolate(cycle, [0, 12, 48, 60], [0, 0.9, 0.9, 0]);
+        const pOpacity = interpolate(cycle, [0, 12, 48, 60], [0, 0.92, 0.92, 0]);
         const pX = idx === 0 ? -62 : idx === 1 ? 62 : -15;
         return (
           <div
             key={`pt-${idx}`}
             style={{
               position: 'absolute',
-              top: 14,
+              top: isHeadMode ? 48 : 14,
               left: '50%',
               marginLeft: pX,
               fontSize: 28,
@@ -132,26 +136,56 @@ export const MascotNarrator: React.FC<Props> = ({
         );
       })}
 
-      {/* 3D Chibi Mascot Co-Host */}
-      <div
-        style={{
-          width: 220,
-          height: 296,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transform: `translateY(${stepY}px) rotate(${bodyTilt}deg) scale(${poseScale}) scaleY(${breatheScaleY}) scaleX(${
-            currentPose.flipX ? -1 : 1
-          })`,
-          transformOrigin: 'bottom center',
-          filter: 'drop-shadow(0 14px 24px rgba(0,0,0,0.34))',
-        }}
-      >
-        <Img
-          src={staticFile(currentPose.file)}
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-        />
-      </div>
+      {isHeadMode ? (
+        /* Scene 2 & 3: Expressive Wobble Head Badge (หัวมาสคอตดุ๊กดิ๊กเห็นสีหน้าชัด 2.5x) */
+        <div
+          style={{
+            width: 204,
+            height: 204,
+            marginBottom: 14,
+            borderRadius: '50%',
+            background: `linear-gradient(145deg, #FFFFFF 0%, ${theme.surface} 100%)`,
+            border: `5px solid ${theme.primary}`,
+            boxShadow: `0 14px 30px rgba(0,0,0,0.28), 0 0 0 6px ${theme.primary}33`,
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: `translateY(${stepY}px) rotate(${bodyTilt}deg) scale(${poseScale}) scaleY(${breatheScaleY})`,
+            transformOrigin: '50% 85%',
+          }}
+        >
+          <Img
+            src={staticFile(headSprite)}
+            style={{
+              width: '108%',
+              height: '108%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              transform: sceneIdx === 1 ? 'scaleX(-1)' : 'none',
+            }}
+          />
+        </div>
+      ) : (
+        /* Scene 1 & 4: Full-Body Mascot (Walk-in Wave & Orange Basket CTA) */
+        <div
+          style={{
+            width: 220,
+            height: 296,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: `translateY(${stepY}px) rotate(${bodyTilt}deg) scale(${poseScale}) scaleY(${breatheScaleY})`,
+            transformOrigin: 'bottom center',
+            filter: 'drop-shadow(0 14px 24px rgba(0,0,0,0.34))',
+          }}
+        >
+          <Img
+            src={staticFile(fullSprite)}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          />
+        </div>
+      )}
     </div>
   );
 };

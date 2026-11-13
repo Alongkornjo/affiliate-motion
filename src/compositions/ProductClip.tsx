@@ -366,10 +366,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   >
                     <span
                       style={{
-                        width: 38,
-                        height: 38,
+                        width: 44,
+                        height: 44,
                         borderRadius: '50%',
-                        backgroundColor: isActive ? theme.accent : theme.primary,
+                        backgroundColor: isActive ? '#FFFFFF' : theme.primary,
+                        border: isActive ? `2.5px solid ${theme.accent}` : 'none',
                         color: isActive ? '#111827' : theme.badgeText,
                         display: 'flex',
                         alignItems: 'center',
@@ -377,9 +378,18 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                         fontSize: 21,
                         fontWeight: 800,
                         flexShrink: 0,
+                        overflow: 'hidden',
+                        transform: isActive ? `rotate(${Math.sin(frame / 3.8) * 12}deg)` : 'none',
                       }}
                     >
-                      {isActive ? '👉' : idx + 1}
+                      {isActive ? (
+                        <Img
+                          src={staticFile(`mascot/${props.mascotId || pickMascotByCategory(props.category)}/head_happy.png`)}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                        />
+                      ) : (
+                        idx + 1
+                      )}
                     </span>
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {pt}
