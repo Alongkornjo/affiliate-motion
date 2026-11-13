@@ -71,13 +71,71 @@ def make_sparkle(duration: float = 0.35) -> np.ndarray:
     return sig
 
 
+def make_bgm_loop(bpm: float = 112.0, bars: int = 4) -> np.ndarray:
+    """Synthesize a soft, cheerful, loopable marimba + warm pad + gentle shaker BGM."""
+    beat_dur = 60.0 / bpm
+    total_dur = beat_dur * 4 * bars
+    n = int(SAMPLE_RATE * total_dur)
+    t = np.linspace(0, total_dur, n, endpoint=False)
+    sig = np.zeros(n)
+
+    # Warm C - G - Am - F progression (Hz)
+    chords = [
+        [261.63, 329.63, 392.00],  # C
+        [196.00, 246.94, 293.66],  # G
+        [220.00, 261.63, 329.63],  # Am
+        [174.61, 220.00, 261.63],  # F
+    ]
+    roots = [130.81, 98.00, 110.00, 87.31]
+
+    bar_samples = int(SAMPLE_RATE * beat_dur * 4)
+    rng = np.random.default_rng(7)
+
+    for b in range(bars):
+        chord = chords[b % len(chords)]
+        root = roots[b % len(roots)]
+        start_idx = b * bar_samples
+        end_idx = min((b + 1) * bar_samples, n)
+        bt = np.linspace(0, (end_idx - start_idx) / SAMPLE_RATE, end_idx - start_idx, endpoint=False)
+
+        # Soft warm pad
+        pad_env = np.sin(np.pi * bt / (beat_dur * 4)) ** 0.4
+        pad = sum(np.sin(2 * math.pi * f * bt) for f in chord) * 0.08 * pad_env
+        bass = np.sin(2 * math.pi * root * bt) * 0.14 * np.exp(-1.5 * (bt % beat_dur))
+        sig[start_idx:end_idx] += pad + bass
+
+        # Cheerful plucked arpeggio notes on 8th beats
+        arp_pattern = [0, 1, 2, 1, 0, 2, 1, 2]
+        step_dur = beat_dur / 2.0
+        for step, c_idx in enumerate(arp_pattern):
+            note_start = start_idx + int(step * step_dur * SAMPLE_RATE)
+            note_len = min(int(0.32 * SAMPLE_RATE), n - note_start)
+            if note_len <= 0:
+                continue
+            nt = np.linspace(0, note_len / SAMPLE_RATE, note_len, endpoint=False)
+            freq = chord[c_idx] * 2.0
+            nenv = np.exp(-11.0 * nt) * (1 - np.exp(-180.0 * nt))
+            sig[note_start : note_start + note_len] += np.sin(2 * math.pi * freq * nt) * 0.12 * nenv
+
+            # Subtle light offbeat shaker
+            if step % 2 == 1:
+                slen = min(int(0.04 * SAMPLE_RATE), n - note_start)
+                st = np.linspace(0, slen / SAMPLE_RATE, slen, endpoint=False)
+                noise = rng.normal(0, 1, slen)
+                senv = np.exp(-80.0 * st)
+                sig[note_start : note_start + slen] += noise * senv * 0.025
+
+    return sig
+
+
 def main():
     sfx_dir = Path(__file__).resolve().parent.parent / "public" / "sfx"
     save_wav(sfx_dir / "whoosh.wav", make_whoosh())
     save_wav(sfx_dir / "pop.wav", make_pop())
     save_wav(sfx_dir / "ding.wav", make_ding())
     save_wav(sfx_dir / "sparkle.wav", make_sparkle())
-    print(f"Generated 4 SFX files in {sfx_dir}")
+    save_wav(sfx_dir / "bgm_upbeat.wav", make_bgm_loop())
+    print(f"Generated 4 SFX + BGM loop in {sfx_dir}")
 
 
 if __name__ == "__main__":

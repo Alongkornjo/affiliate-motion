@@ -112,7 +112,7 @@ export const KaraokeCaptions: React.FC<Props> = ({
           }}
         />
 
-        <span style={{ fontSize: 38, fontWeight: 700, letterSpacing: 0 }}>
+        <span style={{ fontSize: 35, fontWeight: 700, letterSpacing: 0 }}>
           {activeLine.words.map((w, idx) => {
             const isSpoken = currentTime >= w.start - 0.04 && currentTime <= w.end + 0.06;
             const prev = idx > 0 ? activeLine.words[idx - 1].word : '';

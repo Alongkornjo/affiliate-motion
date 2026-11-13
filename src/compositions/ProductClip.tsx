@@ -13,10 +13,94 @@ import {
 import { KaraokeCaptions } from '../components/KaraokeCaptions';
 import { MascotNarrator } from '../components/MascotNarrator';
 import { SAFE_ZONES, THEMES, pickMascotByCategory } from '../themes';
-import { ProductClipProps } from '../types';
+import { CaptionLine, ProductClipProps } from '../types';
 
 const bodyFont = 'MitrLocal';
 const headlineFont = 'MaliLocal';
+
+/** Blurred-glass backdrop + crisp full-frame product image so text/swatches are never cropped */
+const ProductStageImage: React.FC<{ src: string; zoom?: number }> = ({ src, zoom = 1 }) => (
+  <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+    <Img
+      src={staticFile(src)}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        transform: 'scale(1.18)',
+        filter: 'blur(26px) brightness(0.88)',
+        opacity: 0.72,
+      }}
+    />
+    <Img
+      src={staticFile(src)}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        transform: `scale(${zoom})`,
+        filter: 'drop-shadow(0 10px 24px rgba(0,0,0,0.16))',
+      }}
+    />
+  </div>
+);
+
+/** Align scene transitions cleanly to spoken caption line boundaries & key phrases */
+function computeSceneBounds(
+  captions: CaptionLine[],
+  durationInFrames: number,
+  fps: number
+): [number, number, number] {
+  const def1 = Math.floor(durationInFrames * 0.24);
+  const def2 = Math.floor(durationInFrames * 0.56);
+  const def3 = Math.floor(durationInFrames * 0.78);
+
+  if (!captions || captions.length < 4) {
+    return [def1, def2, def3];
+  }
+
+  const lineEnds = captions.map((l) => Math.round(l.end * fps));
+  const closestEnd = (target: number, minF: number, maxF: number) => {
+    const cands = lineEnds.filter((f) => f >= minF && f <= maxF);
+    if (cands.length === 0) return target;
+    return cands.reduce((best, cur) => (Math.abs(cur - target) < Math.abs(best - target) ? cur : best), cands[0]);
+  };
+
+  // Lock Scene 4 (CTA) to start of the final CTA line when it mentions basket/order
+  const ctaLine = [...captions]
+    .reverse()
+    .find((l) => /ตะกร้า|กดดู|สั่งซื้อ|พิกัด|ลิงก์/.test(l.text));
+  let s3End = def3;
+  if (ctaLine) {
+    const cand = Math.round(ctaLine.start * fps);
+    if (cand >= Math.floor(durationInFrames * 0.65) && cand <= Math.floor(durationInFrames * 0.92)) {
+      s3End = cand;
+    }
+  } else {
+    s3End = closestEnd(def3, Math.floor(durationInFrames * 0.68), Math.floor(durationInFrames * 0.88));
+  }
+
+  // Lock Scene 3 (Spotlight / Shades) to start of line mentioning shades/colors/texture if in mid-section
+  const spotLine = captions.find(
+    (l) => /เฉดสี|สี|โทน|เนื้อ|ขนาด|วิธีใช้/.test(l.text) && l.start * fps >= durationInFrames * 0.44
+  );
+  let s2End = def2;
+  if (spotLine) {
+    const cand = Math.round(spotLine.start * fps);
+    if (cand < s3End - fps * 2.5) {
+      s2End = cand;
+    }
+  } else {
+    s2End = closestEnd(def2, Math.floor(durationInFrames * 0.45), s3End - fps * 2);
+  }
+
+  const s1End = closestEnd(def1, Math.floor(durationInFrames * 0.16), Math.min(s2End - fps * 2.5, Math.floor(durationInFrames * 0.34)));
+
+  return [s1End, s2End, s3End];
+}
 
 export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const frame = useCurrentFrame();
@@ -31,11 +115,8 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const sideLeftImg = images[1] || images[0];
   const sideRightImg = images[2] || images[1] || images[0];
 
-  // 4-Scene Commercial Timeline
-  const s1End = Math.floor(durationInFrames * 0.24); // HeroCollage
-  const s2End = Math.floor(durationInFrames * 0.56); // FeatureGrid
-  const s3End = Math.floor(durationInFrames * 0.76); // SpotlightZoom
-  // s3End -> durationInFrames: ConversionCTA
+  // Speech-Synced 4-Scene Commercial Timeline
+  const [s1End, s2End, s3End] = computeSceneBounds(props.captions, durationInFrames, fps);
 
   const isHero = frame < s1End;
   const isGrid = frame >= s1End && frame < s2End;
@@ -49,10 +130,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const sideCardSpring = spring({ frame: Math.max(frame - 6, 0), fps, config: { damping: 13, stiffness: 130 } });
   const ctaSpring = spring({ frame: Math.max(frame - s3End, 0), fps, config: { damping: 12, stiffness: 150 } });
 
-  const kenBurnsScale = interpolate(frame, [0, durationInFrames], [1.0, 1.12], {
+  // Gentle 1.0 -> 1.04 Ken Burns so full product edges stay visible
+  const kenBurnsScale = interpolate(frame, [0, durationInFrames], [1.0, 1.04], {
     extrapolateRight: 'clamp',
   });
-  const floatY = Math.sin(frame / 16) * 7;
+  const floatY = Math.sin(frame / 16) * 5;
   const ctaPulse = isCta ? 1 + Math.sin((frame - s3End) / 6) * 0.025 : 1;
   const progressPct = Math.min((frame / Math.max(durationInFrames - 1, 1)) * 100, 100);
 
@@ -72,10 +154,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
     Math.max(props.keyPoints.length - 1, 0)
   );
 
-  const ctaLabel =
+  const rawCtaText =
     props.ctaMode === 'bio' && props.ctaText
       ? props.ctaText
-      : props.ctaText || '🛒 กดดูสินค้าจากตะกร้าได้เลย!';
+      : props.ctaText || 'กดดูสินค้าจากตะกร้าได้เลย!';
+  const cleanCtaText = rawCtaText.replace(/^[\u{1F300}-\u{1FAFF}\s]+/u, '').trim() || 'กดดูสินค้าจากตะกร้าได้เลย!';
 
   return (
     <AbsoluteFill
@@ -95,11 +178,12 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       {/* Voiceover Track */}
       {props.voiceoverFile && <Audio src={staticFile(props.voiceoverFile)} />}
 
-      {/* Procedural SFX Tracks synced to 4 Scenes */}
+      {/* Subtle Upbeat BGM + Procedural SFX Synced to Speech-Matched Scenes */}
       {props.enableSfx !== false && (
         <>
+          <Audio src={staticFile('sfx/bgm_upbeat.wav')} loop volume={0.075} />
           <Sequence from={2} durationInFrames={18}>
-            <Audio src={staticFile('sfx/pop.wav')} volume={0.22} />
+            <Audio src={staticFile('sfx/pop.wav')} volume={0.2} />
           </Sequence>
           <Sequence from={Math.max(s1End, 15)} durationInFrames={20}>
             <Audio src={staticFile('sfx/whoosh.wav')} volume={0.18} />
@@ -108,7 +192,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             const ptFrame = Math.floor(s1End + ((s2End - s1End) * idx) / Math.max(props.keyPoints.length, 1));
             return (
               <Sequence key={`sfx-pt-${idx}`} from={Math.max(ptFrame, 12)} durationInFrames={24}>
-                <Audio src={staticFile('sfx/ding.wav')} volume={0.16} />
+                <Audio src={staticFile('sfx/ding.wav')} volume={0.15} />
               </Sequence>
             );
           })}
@@ -258,7 +342,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   zIndex: 5,
                 }}
               >
-                <Img src={staticFile(sideLeftImg)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <ProductStageImage src={sideLeftImg} zoom={1.0} />
               </div>
               <div
                 style={{
@@ -274,12 +358,12 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   zIndex: 5,
                 }}
               >
-                <Img src={staticFile(sideRightImg)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <ProductStageImage src={sideRightImg} zoom={1.0} />
               </div>
             </>
           )}
 
-          {/* Main Center Product Frame */}
+          {/* Main Center Product Frame (Full-frame contain + blurred glass backdrop) */}
           <div
             style={{
               position: 'relative',
@@ -296,14 +380,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             }}
           >
             {currentImg && (
-              <Img
-                src={staticFile(currentImg)}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transform: `scale(${isSpotlight ? kenBurnsScale * 1.08 : kenBurnsScale})`,
-                }}
+              <ProductStageImage
+                src={currentImg}
+                zoom={isSpotlight ? kenBurnsScale * 1.02 : kenBurnsScale}
               />
             )}
 
@@ -327,7 +406,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             )}
           </div>
 
-          {/* Scene 2: Animated Feature Checklist Overlay with Interactive Mascot Pointer */}
+          {/* Scene 2: Staggered Feature Checklist with Mini Wobble Mascot Head */}
           {isGrid && (
             <div
               style={{
@@ -345,6 +424,12 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             >
               {props.keyPoints.slice(0, 3).map((pt, idx) => {
                 const isActive = idx === activePointIdx;
+                const enterSpring = spring({
+                  frame: Math.max(frame - s1End - idx * 7, 0),
+                  fps,
+                  config: { damping: 14, stiffness: 140 },
+                });
+                const enterY = interpolate(enterSpring, [0, 1], [28, 0]);
                 return (
                   <div
                     key={`kp-${idx}`}
@@ -354,14 +439,15 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       color: isActive ? theme.badgeText : theme.text,
                       border: `2.5px solid ${isActive ? theme.accent : theme.surfaceBorder}`,
                       borderRadius: 18,
-                      padding: '14px 22px',
+                      padding: '13px 20px',
                       fontSize: 27,
                       fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 14,
+                      opacity: enterSpring,
                       boxShadow: isActive ? '0 10px 26px rgba(0,0,0,0.28)' : 'none',
-                      transform: `translateX(${isActive ? 10 : 0}px) scale(${isActive ? 1.02 : 0.98})`,
+                      transform: `translateY(${enterY}px) translateX(${isActive ? 10 : 0}px) scale(${isActive ? 1.02 : 0.98})`,
                     }}
                   >
                     <span
@@ -402,7 +488,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       </div>
 
-      {/* Scene 4: Pulsing Conversion CTA Button right next to Mascot's Orange Basket */}
+      {/* Scene 4: Vibrant Pulsing Conversion CTA Button with Crisp White Basket Icon */}
       {isCta && (
         <div
           style={{
@@ -416,18 +502,28 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         >
           <div
             style={{
-              background: `linear-gradient(90deg, ${theme.primary}, ${theme.accent})`,
-              color: theme.badgeText,
-              padding: '15px 26px',
+              background: theme.ctaGradient,
+              color: '#FFFFFF',
+              padding: '15px 24px',
               borderRadius: 999,
               fontSize: 30,
               fontWeight: 800,
               textAlign: 'center',
-              boxShadow: '0 12px 28px rgba(0,0,0,0.3)',
+              boxShadow: '0 14px 32px rgba(255, 61, 104, 0.38)',
               border: '3px solid #FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
             }}
           >
-            {ctaLabel}
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 11h14l-1.5 8h-11z" fill="rgba(255,255,255,0.22)" />
+              <path d="M9 11l3-6 3 6" />
+              <line x1="10" y1="14" x2="10" y2="16" />
+              <line x1="14" y1="14" x2="14" y2="16" />
+            </svg>
+            <span>{cleanCtaText}</span>
           </div>
         </div>
       )}

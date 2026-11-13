@@ -8,6 +8,7 @@ export interface BrandTheme {
   surfaceBorder: string;
   primary: string;
   accent: string;
+  ctaGradient: string;
   text: string;
   mutedText: string;
   badgeText: string;
@@ -35,6 +36,7 @@ export const THEMES: Record<ThemeId, BrandTheme> = {
     surfaceBorder: '#EE4D2D',
     primary: '#EE4D2D',
     accent: '#FFD426',
+    ctaGradient: 'linear-gradient(90deg, #EE4D2D 0%, #FF6B3D 55%, #FF8C42 100%)',
     text: '#FFFFFF',
     mutedText: '#CBD5E1',
     badgeText: '#FFFFFF',
@@ -50,8 +52,9 @@ export const THEMES: Record<ThemeId, BrandTheme> = {
     bgGradient: 'linear-gradient(180deg, #FAF7F2 0%, #F3E9E2 100%)',
     surface: 'rgba(255, 255, 255, 0.96)',
     surfaceBorder: '#FBCFE8',
-    primary: '#FF5A5F',
-    accent: '#10B981',
+    primary: '#FF4D6D',
+    accent: '#FFB703',
+    ctaGradient: 'linear-gradient(90deg, #FF3D68 0%, #FF6B6B 55%, #FF8E53 100%)',
     text: '#18181B',
     mutedText: '#52525B',
     badgeText: '#FFFFFF',
@@ -69,9 +72,10 @@ export const THEMES: Record<ThemeId, BrandTheme> = {
     surfaceBorder: 'rgba(56, 189, 248, 0.45)',
     primary: '#38BDF8',
     accent: '#22D3EE',
+    ctaGradient: 'linear-gradient(90deg, #0284C7 0%, #0EA5E9 55%, #22D3EE 100%)',
     text: '#F8FAFC',
     mutedText: '#94A3B8',
-    badgeText: '#0B1221',
+    badgeText: '#FFFFFF',
     captionBg: 'rgba(11, 18, 33, 0.88)',
     captionText: '#F8FAFC',
     captionHighlightBg: '#38BDF8',
@@ -84,8 +88,9 @@ export const THEMES: Record<ThemeId, BrandTheme> = {
     bgGradient: 'linear-gradient(180deg, #FFFBF5 0%, #FEF3C7 100%)',
     surface: 'rgba(255, 255, 255, 0.95)',
     surfaceBorder: '#F59E0B',
-    primary: '#D97706',
-    accent: '#059669',
+    primary: '#EA580C',
+    accent: '#F59E0B',
+    ctaGradient: 'linear-gradient(90deg, #EA580C 0%, #F97316 55%, #F59E0B 100%)',
     text: '#1F2937',
     mutedText: '#6B7280',
     badgeText: '#FFFFFF',
