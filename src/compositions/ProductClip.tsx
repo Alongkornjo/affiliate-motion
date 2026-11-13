@@ -304,17 +304,20 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           gap: 16,
         }}
       >
-        {/* Top Dynamic Headline Pill */}
+        {/* Top Dynamic Headline Pill (Soft Rounded Glass) */}
         <div
           style={{
             transform: `scale(${interpolate(hookSpring, [0, 1], [0.88, 1])})`,
-            backgroundColor: isHero ? theme.primary : theme.surface,
-            border: `2px solid ${isHero ? theme.primary : theme.surfaceBorder}`,
+            background: isHero ? theme.ctaGradient : theme.surface,
+            backdropFilter: 'blur(14px)',
+            border: isHero ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
             color: isHero ? theme.badgeText : theme.text,
             padding: '15px 26px',
-            borderRadius: 22,
+            borderRadius: 28,
             textAlign: 'center',
-            boxShadow: '0 12px 30px rgba(0,0,0,0.22)',
+            boxShadow: isHero
+              ? '0 14px 32px rgba(255, 61, 104, 0.24)'
+              : '0 10px 28px rgba(0, 0, 0, 0.08)',
             width: '100%',
           }}
         >
@@ -351,10 +354,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   left: -8,
                   width: 240,
                   height: 300,
-                  borderRadius: 24,
+                  borderRadius: 26,
                   overflow: 'hidden',
-                  border: `3px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 14px 32px rgba(0,0,0,0.28)',
+                  border: `2px solid ${theme.surfaceBorder}`,
+                  boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
                   transform: `rotate(-8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
                   zIndex: 5,
                 }}
@@ -367,10 +370,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   right: -8,
                   width: 240,
                   height: 300,
-                  borderRadius: 24,
+                  borderRadius: 26,
                   overflow: 'hidden',
-                  border: `3px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 14px 32px rgba(0,0,0,0.28)',
+                  border: `2px solid ${theme.surfaceBorder}`,
+                  boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
                   transform: `rotate(8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
                   zIndex: 5,
                 }}
@@ -387,11 +390,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               width: isHero && images.length > 1 ? '76%' : '100%',
               height: isGrid ? '56%' : isSpotlight && props.decisionHelper ? '89%' : isCta && props.howToSteps?.length ? '87%' : '100%',
               alignSelf: isGrid ? 'flex-start' : 'center',
-              borderRadius: 30,
+              borderRadius: 32,
               overflow: 'hidden',
               backgroundColor: theme.surface,
-              border: `3px solid ${theme.surfaceBorder}`,
-              boxShadow: '0 24px 52px rgba(0, 0, 0, 0.32)',
+              border: `2px solid ${theme.surfaceBorder}`,
+              boxShadow: '0 22px 48px rgba(0, 0, 0, 0.20)',
               transform: `translateY(${floatY}px)`,
               zIndex: 10,
             }}
@@ -415,7 +418,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   borderRadius: 999,
                   fontSize: 26,
                   fontWeight: 800,
-                  boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
                 }}
               >
                 ลด {discount}%
@@ -423,20 +426,22 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             )}
           </div>
 
-          {/* Scene 3: Shade Decision Helper Pill */}
+          {/* Scene 3: Shade Decision Helper Pill (Soft Glass) */}
           {isSpotlight && props.decisionHelper && (
             <div
               style={{
-                width: '100%',
+                width: 'fit-content',
+                maxWidth: '100%',
                 backgroundColor: theme.surface,
-                border: `2px solid ${theme.primary}`,
+                backdropFilter: 'blur(12px)',
+                border: `1.5px solid ${theme.surfaceBorder}`,
                 color: theme.text,
-                borderRadius: 18,
-                padding: '12px 18px',
+                borderRadius: 999,
+                padding: '12px 24px',
                 fontSize: 24,
                 fontWeight: 700,
                 textAlign: 'center',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.14)',
+                boxShadow: '0 10px 26px rgba(255, 77, 109, 0.12)',
                 zIndex: 12,
               }}
             >
@@ -444,7 +449,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
 
-          {/* Scene 4: 3-Second How-To Steps Strip */}
+          {/* Scene 4: 3-Second How-To Steps Strip (Soft Rounded Pills) */}
           {isCta && props.howToSteps && props.howToSteps.length > 0 && (
             <div
               style={{
@@ -461,8 +466,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   style={{
                     flex: 1,
                     backgroundColor: theme.surface,
-                    border: `2px solid ${theme.surfaceBorder}`,
-                    borderRadius: 16,
+                    backdropFilter: 'blur(10px)',
+                    border: `1.5px solid ${theme.surfaceBorder}`,
+                    borderRadius: 20,
                     padding: '10px 8px',
                     display: 'flex',
                     alignItems: 'center',
@@ -471,7 +477,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                     fontSize: 21,
                     fontWeight: 700,
                     color: theme.text,
-                    boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.07)',
                   }}
                 >
                   <span
@@ -479,7 +485,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       width: 28,
                       height: 28,
                       borderRadius: '50%',
-                      backgroundColor: theme.primary,
+                      background: theme.ctaGradient,
                       color: '#FFFFFF',
                       display: 'flex',
                       alignItems: 'center',
@@ -499,7 +505,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
 
-          {/* Scene 2: Staggered Feature Checklist with Mini Wobble Mascot Head */}
+          {/* Scene 2: Staggered Feature Checklist with Soft Glass Cards */}
           {isGrid && (
             <div
               style={{
@@ -528,10 +534,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                     key={`kp-${idx}`}
                     style={{
                       position: 'relative',
-                      backgroundColor: isActive ? theme.primary : theme.surface,
-                      color: isActive ? theme.badgeText : theme.text,
-                      border: `2.5px solid ${isActive ? theme.accent : theme.surfaceBorder}`,
-                      borderRadius: 18,
+                      background: isActive ? theme.ctaGradient : theme.surface,
+                      backdropFilter: 'blur(12px)',
+                      color: isActive ? '#FFFFFF' : theme.text,
+                      border: isActive ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
+                      borderRadius: 22,
                       padding: '13px 20px',
                       fontSize: 27,
                       fontWeight: 700,
@@ -539,7 +546,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       alignItems: 'center',
                       gap: 14,
                       opacity: enterSpring,
-                      boxShadow: isActive ? '0 10px 26px rgba(0,0,0,0.28)' : 'none',
+                      boxShadow: isActive
+                        ? '0 12px 28px rgba(255, 61, 104, 0.25)'
+                        : '0 6px 18px rgba(0, 0, 0, 0.06)',
                       transform: `translateY(${enterY}px) translateX(${isActive ? 10 : 0}px) scale(${isActive ? 1.02 : 0.98})`,
                     }}
                   >

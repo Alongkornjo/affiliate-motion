@@ -37,12 +37,11 @@ export const KaraokeCaptions: React.FC<Props> = ({
 
   const mascotName = MASCOT_NAMES[mascotId] || 'น้องมินิ';
 
-  // Steady, non-bouncing Presenter Status Header (changes only per scene/point)
   const headerLabel =
     sceneIdx === 0
       ? `✨ ${mascotName} ป้ายยาของเด็ด`
       : sceneIdx === 1
-      ? `💡 ${mascotName} สรุปจุดเด่น (ข้อ ${ Math.min(activePointIdx + 1, totalPoints) }/${totalPoints})`
+      ? `💡 ${mascotName} สรุปจุดเด่น (${Math.min(activePointIdx + 1, totalPoints)}/${totalPoints})`
       : sceneIdx === 2
       ? `💕 ${mascotName} คอนเฟิร์มความปัง`
       : `🛒 ${mascotName} ชี้เป้าพิกัดในตะกร้า`;
@@ -53,8 +52,8 @@ export const KaraokeCaptions: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: SAFE_ZONES.bottomCaption - 18,
-        left: 232,
+        bottom: SAFE_ZONES.bottomCaption - 14,
+        left: 234,
         right: SAFE_ZONES.right - 15,
         display: 'flex',
         flexDirection: 'column',
@@ -63,55 +62,47 @@ export const KaraokeCaptions: React.FC<Props> = ({
         zIndex: 30,
       }}
     >
-      {/* Rock-Steady Presenter Header Pill (0% bounce, 100% readable) */}
+      {/* Soft Floating Presenter Tag Pill */}
       <div
         style={{
-          backgroundColor: theme.primary,
-          color: theme.badgeText,
-          padding: '6px 18px',
-          borderRadius: '16px 16px 16px 4px',
-          fontSize: 22,
+          background: theme.ctaGradient,
+          color: '#FFFFFF',
+          padding: '5px 16px',
+          borderRadius: 999,
+          fontSize: 20,
           fontWeight: 700,
-          boxShadow: '0 6px 16px rgba(0,0,0,0.22)',
-          marginBottom: -6,
-          marginLeft: 14,
+          boxShadow: '0 6px 16px rgba(0, 0, 0, 0.14)',
+          marginBottom: 8,
+          marginLeft: 6,
           zIndex: 32,
-          display: 'flex',
+          display: 'inline-flex',
           alignItems: 'center',
-          gap: 8,
+          gap: 6,
         }}
       >
         <span>{headerLabel}</span>
       </div>
 
-      {/* Unified Speech Bubble Box */}
+      {/* Soft Pastel Glass Speech Bubble (Fit-Content, No Harsh Border) */}
       <div
         style={{
           position: 'relative',
-          width: '100%',
+          width: 'fit-content',
+          maxWidth: '100%',
           backgroundColor: theme.captionBg,
-          borderRadius: 22,
-          padding: '18px 24px 16px 24px',
-          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.36)',
-          border: `2.5px solid ${theme.primary}`,
+          backdropFilter: 'blur(16px)',
+          borderRadius: 28,
+          padding: '15px 24px',
+          boxShadow: theme.isDark
+            ? '0 14px 36px rgba(0, 0, 0, 0.38)'
+            : '0 14px 34px rgba(255, 77, 109, 0.14), 0 4px 14px rgba(0, 0, 0, 0.06)',
+          border: theme.isDark
+            ? '1.5px solid rgba(255, 255, 255, 0.16)'
+            : '1.5px solid rgba(255, 255, 255, 0.85)',
           textAlign: 'left',
-          lineHeight: 1.35,
+          lineHeight: 1.42,
         }}
       >
-        {/* Speech Bubble Tail pointing left to Mascot */}
-        <div
-          style={{
-            position: 'absolute',
-            left: -14,
-            bottom: 26,
-            width: 0,
-            height: 0,
-            borderTop: '12px solid transparent',
-            borderBottom: '12px solid transparent',
-            borderRight: `14px solid ${theme.primary}`,
-          }}
-        />
-
         <span style={{ fontSize: 35, fontWeight: 700, letterSpacing: 0 }}>
           {activeLine.words.map((w, idx) => {
             const isSpoken = currentTime >= w.start - 0.04 && currentTime <= w.end + 0.06;
@@ -126,7 +117,8 @@ export const KaraokeCaptions: React.FC<Props> = ({
                   style={{
                     color: isSpoken ? theme.captionHighlightText : theme.captionText,
                     backgroundColor: isSpoken ? theme.captionHighlightBg : 'transparent',
-                    borderRadius: isSpoken ? 8 : 0,
+                    borderBottom: isSpoken ? `4px solid ${theme.primary}` : '4px solid transparent',
+                    borderRadius: isSpoken ? 10 : 0,
                     padding: isSpoken ? '1px 6px' : '0px',
                   }}
                 >
