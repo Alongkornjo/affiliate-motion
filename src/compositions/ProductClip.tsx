@@ -11,6 +11,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 import { KaraokeCaptions } from '../components/KaraokeCaptions';
+import { MascotNarrator } from '../components/MascotNarrator';
 import { SAFE_ZONES, THEMES } from '../themes';
 import { ProductClipProps } from '../types';
 
@@ -447,6 +448,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           </div>
         )}
       </div>
+
+      {/* Signature Channel Mascot Narrator (4-Corner Dynamic Hopping + Lip-Sync) */}
+      <MascotNarrator sceneIdx={sceneIdx} captions={props.captions} theme={theme} />
 
       {/* Thai Karaoke Captions */}
       <KaraokeCaptions lines={props.captions} theme={theme} />
