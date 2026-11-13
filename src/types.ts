@@ -33,6 +33,10 @@ export type ProductClipProps = {
   hookText: string;
   problemText?: string;
   keyPoints: string[];
+  spotlightTitle?: string;
+  decisionHelper?: string;
+  howToSteps?: string[];
+  ctaHeadline?: string;
   ctaText: string;
   ctaMode?: CtaMode;
   dmKeyword?: string;

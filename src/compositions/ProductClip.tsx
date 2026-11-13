@@ -112,8 +112,8 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
 
   const images = props.images.length > 0 ? props.images : [];
   const mainImg = images[0];
-  const sideLeftImg = images[1] || images[0];
-  const sideRightImg = images[2] || images[1] || images[0];
+  const sideLeftImg = images[5] || images[1] || images[0];
+  const sideRightImg = images[6] || images[2] || images[1] || images[0];
 
   // Speech-Synced 4-Scene Commercial Timeline
   const [s1End, s2End, s3End] = computeSceneBounds(props.captions, durationInFrames, fps);
@@ -124,7 +124,6 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const isCta = frame >= s3End;
 
   const sceneIdx = isHero ? 0 : isGrid ? 1 : isSpotlight ? 2 : 3;
-  const currentImg = images[sceneIdx % Math.max(images.length, 1)] || mainImg;
 
   const hookSpring = spring({ frame, fps, config: { damping: 12, stiffness: 165 } });
   const sideCardSpring = spring({ frame: Math.max(frame - 6, 0), fps, config: { damping: 13, stiffness: 130 } });
@@ -153,6 +152,22 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
     ),
     Math.max(props.keyPoints.length - 1, 0)
   );
+
+  const spotMid = Math.floor((s2End + s3End) / 2);
+  const gridImages = [
+    images[6] || images[1] || mainImg,
+    images[1] || images[2] || mainImg,
+    images[4] || images[3] || mainImg,
+  ];
+  const currentImg = isHero
+    ? mainImg
+    : isGrid
+    ? gridImages[activePointIdx % gridImages.length]
+    : isSpotlight
+    ? frame < spotMid
+      ? images[2] || images[1] || mainImg
+      : images[5] || images[3] || mainImg
+    : images[3] || images[5] || mainImg;
 
   const rawCtaText =
     props.ctaMode === 'bio' && props.ctaText
@@ -303,14 +318,14 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             width: '100%',
           }}
         >
-          <div style={{ fontFamily: headlineFont, fontSize: 40, fontWeight: 700, lineHeight: 1.22 }}>
+          <div style={{ fontFamily: headlineFont, fontSize: 35, fontWeight: 700, lineHeight: 1.25 }}>
             {isHero
               ? props.hookText
               : isGrid
               ? 'ทำไมตัวนี้ถึงขายดี?'
               : isSpotlight
-              ? props.productName
-              : 'รีบกดก่อนหมดโปร!'}
+              ? props.spotlightTitle || props.productName
+              : props.ctaHeadline || 'เล็งสีที่ชอบไว้แล้วใช่ไหม? จิ้มดูในตะกร้าเลย!'}
           </div>
         </div>
 
@@ -321,8 +336,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             width: '100%',
             flex: 1,
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: 12,
           }}
         >
           {/* Scene 1: Tilted Side Collage Cards behind Main Card */}
@@ -368,7 +385,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             style={{
               position: 'relative',
               width: isHero && images.length > 1 ? '76%' : '100%',
-              height: isGrid ? '56%' : '100%',
+              height: isGrid ? '56%' : isSpotlight && props.decisionHelper ? '89%' : isCta && props.howToSteps?.length ? '87%' : '100%',
               alignSelf: isGrid ? 'flex-start' : 'center',
               borderRadius: 30,
               overflow: 'hidden',
@@ -405,6 +422,82 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               </div>
             )}
           </div>
+
+          {/* Scene 3: Shade Decision Helper Pill */}
+          {isSpotlight && props.decisionHelper && (
+            <div
+              style={{
+                width: '100%',
+                backgroundColor: theme.surface,
+                border: `2px solid ${theme.primary}`,
+                color: theme.text,
+                borderRadius: 18,
+                padding: '12px 18px',
+                fontSize: 24,
+                fontWeight: 700,
+                textAlign: 'center',
+                boxShadow: '0 8px 20px rgba(0,0,0,0.14)',
+                zIndex: 12,
+              }}
+            >
+              {props.decisionHelper}
+            </div>
+          )}
+
+          {/* Scene 4: 3-Second How-To Steps Strip */}
+          {isCta && props.howToSteps && props.howToSteps.length > 0 && (
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 10,
+                zIndex: 12,
+              }}
+            >
+              {props.howToSteps.slice(0, 3).map((step, sIdx) => (
+                <div
+                  key={`step-${sIdx}`}
+                  style={{
+                    flex: 1,
+                    backgroundColor: theme.surface,
+                    border: `2px solid ${theme.surfaceBorder}`,
+                    borderRadius: 16,
+                    padding: '10px 8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    fontSize: 21,
+                    fontWeight: 700,
+                    color: theme.text,
+                    boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: '50%',
+                      backgroundColor: theme.primary,
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 17,
+                      fontWeight: 800,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {sIdx + 1}
+                  </span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {step}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Scene 2: Staggered Feature Checklist with Mini Wobble Mascot Head */}
           {isGrid && (
