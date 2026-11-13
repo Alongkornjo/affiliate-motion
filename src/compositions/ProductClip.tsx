@@ -14,8 +14,8 @@ import { KaraokeCaptions } from '../components/KaraokeCaptions';
 import { SAFE_ZONES, THEMES } from '../themes';
 import { ProductClipProps } from '../types';
 
-const promptFont = 'PromptLocal';
-const kanitFont = 'KanitLocal';
+const bodyFont = 'MitrLocal';
+const headlineFont = 'MaliLocal';
 
 export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const frame = useCurrentFrame();
@@ -72,23 +72,23 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
   );
 
   const ctaLabel =
-    props.ctaMode === 'basket'
-      ? '🛒 กดตะกร้าส้มด้านล่างเลย!'
-      : props.ctaText;
+    props.ctaMode === 'bio' && props.ctaText
+      ? props.ctaText
+      : props.ctaText || '🛒 กดดูสินค้าจากตะกร้าได้เลย!';
 
   return (
     <AbsoluteFill
       style={{
         background: theme.bgGradient,
-        fontFamily: `${promptFont}, ${kanitFont}, sans-serif`,
+        fontFamily: `${bodyFont}, ${headlineFont}, sans-serif`,
         color: theme.text,
         overflow: 'hidden',
       }}
     >
       <style>{`
-        @font-face { font-family: 'PromptLocal'; src: url('${staticFile('fonts/Prompt-SemiBold.ttf')}') format('truetype'); font-weight: 600; font-style: normal; }
-        @font-face { font-family: 'PromptLocal'; src: url('${staticFile('fonts/Prompt-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
-        @font-face { font-family: 'KanitLocal'; src: url('${staticFile('fonts/Kanit-ExtraBold.ttf')}') format('truetype'); font-weight: 800; font-style: normal; }
+        @font-face { font-family: 'MitrLocal'; src: url('${staticFile('fonts/Mitr-SemiBold.ttf')}') format('truetype'); font-weight: 600; font-style: normal; }
+        @font-face { font-family: 'MitrLocal'; src: url('${staticFile('fonts/Mitr-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
+        @font-face { font-family: 'MaliLocal'; src: url('${staticFile('fonts/Mali-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
       `}</style>
 
       {/* Voiceover Track */}
@@ -161,7 +161,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         }}
       />
 
-      {/* Brand Header inside Top Safe Zone */}
+      {/* Category Pill inside Top Safe Zone (no channel watermark) */}
       <div
         style={{
           position: 'absolute',
@@ -169,22 +169,19 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           left: SAFE_ZONES.left,
           right: SAFE_ZONES.right,
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
           zIndex: 20,
         }}
       >
-        <div style={{ fontSize: 25, fontWeight: 700, color: theme.mutedText }}>
-          {props.brandHandle || '@AffiliateMotion'}
-        </div>
         <div
           style={{
             backgroundColor: theme.surface,
             border: `1.5px solid ${theme.surfaceBorder}`,
             color: theme.text,
-            padding: '7px 16px',
+            padding: '7px 18px',
             borderRadius: 999,
-            fontSize: 21,
+            fontSize: 22,
             fontWeight: 600,
           }}
         >
@@ -221,7 +218,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             width: '100%',
           }}
         >
-          <div style={{ fontFamily: kanitFont, fontSize: 40, fontWeight: 800, lineHeight: 1.2 }}>
+          <div style={{ fontFamily: headlineFont, fontSize: 40, fontWeight: 700, lineHeight: 1.22 }}>
             {isHero
               ? props.hookText
               : isGrid
@@ -308,23 +305,6 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 }}
               />
             )}
-
-            <div
-              style={{
-                position: 'absolute',
-                top: 20,
-                left: 20,
-                backgroundColor: theme.primary,
-                color: theme.badgeText,
-                padding: '8px 20px',
-                borderRadius: 999,
-                fontSize: 28,
-                fontWeight: 800,
-                boxShadow: '0 6px 18px rgba(0,0,0,0.28)',
-              }}
-            >
-              #{props.no}
-            </div>
 
             {discount > 0 && (
               <div
@@ -430,7 +410,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                     ฿{props.originalPrice}
                   </span>
                 )}
-                <span style={{ fontFamily: kanitFont, fontSize: 64, fontWeight: 800, color: theme.primary, lineHeight: 1.05 }}>
+                <span style={{ fontFamily: headlineFont, fontSize: 64, fontWeight: 700, color: theme.primary, lineHeight: 1.05 }}>
                   ฿{props.price}
                 </span>
               </div>

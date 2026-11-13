@@ -45,7 +45,7 @@ def parse_brief_text(text: str, no: str, category: str = "ทั่วไป", p
     key_points = bullets[:4] if bullets else [product_name]
     narration_parts = [pain_line] if pain_line else [f"ใครกำลังมองหา {product_name} ห้ามพลาด!"]
     narration_parts.extend(key_points[:3])
-    narration_parts.append(f"กดลิงก์ในไบโอ เลข {no} หรือคอมเมนต์ เอา ได้เลย!")
+    narration_parts.append("กดดูสินค้าจากตะกร้าได้เลย!")
 
     return {
         "no": str(no),

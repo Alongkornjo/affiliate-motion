@@ -89,10 +89,10 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "hookText": product.get("hook_text", product["product_name"]),
         "problemText": product.get("target_pain", ""),
         "keyPoints": product.get("key_points", []),
-        "ctaText": product.get("cta_text", f'กดลิงก์ในไบโอ เลข #{no} · หรือเม้น "{product.get("dm_keyword", "เอา")}"'),
+        "ctaText": product.get("cta_text", "🛒 กดดูสินค้าจากตะกร้าได้เลย!"),
         "ctaMode": cta_mode,
-        "dmKeyword": product.get("dm_keyword", "เอา"),
-        "brandHandle": product.get("brand_handle", "@AffiliateMotion"),
+        "dmKeyword": product.get("dm_keyword", ""),
+        "brandHandle": product.get("brand_handle", ""),
         "themeId": theme_id,
         "layoutVariant": layout_variant,
         "customAccent": custom_accent,
@@ -141,7 +141,7 @@ def main():
     parser = argparse.ArgumentParser(description="Fast batch runner for Affiliate Motion")
     parser.add_argument("products", nargs="+", help="Path(s) to product_<NO>.json")
     parser.add_argument("--tier", choices=["short", "long"], default="short")
-    parser.add_argument("--cta-mode", choices=["bio", "basket"], default="bio")
+    parser.add_argument("--cta-mode", choices=["bio", "basket"], default="basket")
     parser.add_argument("--bundle-dir", default="/tmp/remotion_bundle")
     args = parser.parse_args()
 
