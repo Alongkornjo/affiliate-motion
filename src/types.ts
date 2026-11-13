@@ -8,6 +8,8 @@ export type LayoutVariant =
 
 export type CtaMode = 'bio' | 'basket';
 
+export type MascotId = 'mini' | 'max' | 'sky_cat' | 'star_bear';
+
 export interface CaptionWord {
   word: string;
   start: number;
@@ -37,6 +39,7 @@ export type ProductClipProps = {
   brandHandle?: string;
   themeId: ThemeId;
   layoutVariant: LayoutVariant;
+  mascotId?: MascotId;
   customAccent?: string;
   images: string[];
   voiceoverFile: string;

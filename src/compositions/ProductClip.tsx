@@ -12,7 +12,7 @@ import {
 } from 'remotion';
 import { KaraokeCaptions } from '../components/KaraokeCaptions';
 import { MascotNarrator } from '../components/MascotNarrator';
-import { SAFE_ZONES, THEMES } from '../themes';
+import { SAFE_ZONES, THEMES, pickMascotByCategory } from '../themes';
 import { ProductClipProps } from '../types';
 
 const bodyFont = 'MitrLocal';
@@ -450,7 +450,12 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       </div>
 
       {/* Signature Channel Mascot Narrator (4-Corner Dynamic Hopping + Lip-Sync) */}
-      <MascotNarrator sceneIdx={sceneIdx} captions={props.captions} theme={theme} />
+      <MascotNarrator
+        sceneIdx={sceneIdx}
+        captions={props.captions}
+        theme={theme}
+        mascotId={props.mascotId || pickMascotByCategory(props.category)}
+      />
 
       {/* Thai Karaoke Captions */}
       <KaraokeCaptions lines={props.captions} theme={theme} />

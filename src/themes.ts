@@ -1,4 +1,4 @@
-import { ThemeId } from './types';
+import { MascotId, ThemeId } from './types';
 
 export interface BrandTheme {
   id: ThemeId;
@@ -109,4 +109,18 @@ export function pickThemeByCategory(category: string): ThemeId {
     return 'warm_home';
   }
   return 'flash_sale';
+}
+
+export function pickMascotByCategory(category: string): MascotId {
+  const c = (category || '').toLowerCase();
+  if (/ความงาม|สกินแคร์|เครื่องสำอาง|แฟชั่น|beauty|skincare|cosmetic|fashion/.test(c)) {
+    return 'mini';
+  }
+  if (/ไอที|แก็ดเจ็ต|เครื่องมือ|อิเล็กทรอนิกส์|it|gadget|tech|tool|electronic/.test(c)) {
+    return 'max';
+  }
+  if (/สัตว์เลี้ยง|ไลฟ์สไตล์|ของขวัญ|น่ารัก|pet|lifestyle|cute|gift/.test(c)) {
+    return 'sky_cat';
+  }
+  return 'star_bear';
 }

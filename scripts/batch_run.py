@@ -29,6 +29,18 @@ def sync_public_to_bundle(bundle_dir: Path):
     shutil.copytree(ROOT / "public", bundle_dir / "public", dirs_exist_ok=True)
 
 
+def pick_mascot_by_category(category: str) -> str:
+    import re
+    c = (category or "").lower()
+    if re.search(r"ความงาม|สกินแคร์|เครื่องสำอาง|แฟชั่น|beauty|skincare|cosmetic|fashion", c):
+        return "mini"
+    if re.search(r"ไอที|แก็ดเจ็ต|เครื่องมือ|อิเล็กทรอนิกส์|it|gadget|tech|tool|electronic", c):
+        return "max"
+    if re.search(r"สัตว์เลี้ยง|ไลฟ์สไตล์|ของขวัญ|น่ารัก|pet|lifestyle|cute|gift", c):
+        return "sky_cat"
+    return "star_bear"
+
+
 def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, cta_mode: str):
     product = json.loads(product_path.read_text(encoding="utf-8"))
     no = str(product["no"])
@@ -38,6 +50,7 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
 
     theme_id = product.get("themeId") or THEMES[idx % len(THEMES)]
     layout_variant = product.get("layoutVariant") or LAYOUTS[idx % len(LAYOUTS)]
+    mascot_id = product.get("mascotId") or pick_mascot_by_category(product.get("category", "ทั่วไป"))
 
     # 1. Visual Prep + dominant color extraction
     images = []
@@ -95,6 +108,7 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "brandHandle": product.get("brand_handle", ""),
         "themeId": theme_id,
         "layoutVariant": layout_variant,
+        "mascotId": mascot_id,
         "customAccent": custom_accent,
         "images": images,
         "voiceoverFile": vo_rel,

@@ -1,15 +1,28 @@
 import React from 'react';
 import { Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { BrandTheme } from '../themes';
-import { CaptionLine } from '../types';
+import { CaptionLine, MascotId } from '../types';
 
 interface Props {
   sceneIdx: number; // 0: Hero, 1: Grid, 2: Spotlight, 3: CTA
   captions: CaptionLine[];
   theme: BrandTheme;
+  mascotId?: MascotId;
 }
 
-export const MascotNarrator: React.FC<Props> = ({ sceneIdx, captions, theme }) => {
+const SCENE3_LABELS: Record<MascotId, string> = {
+  mini: 'ละมุนมาก 💕',
+  max: 'สเปคโดนใจ! ⚡',
+  sky_cat: 'น่ารักไม่ไหว ✨',
+  star_bear: 'ของมันต้องมี! 🌟',
+};
+
+export const MascotNarrator: React.FC<Props> = ({
+  sceneIdx,
+  captions,
+  theme,
+  mascotId = 'mini',
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const currentTime = frame / fps;
@@ -46,10 +59,10 @@ export const MascotNarrator: React.FC<Props> = ({ sceneIdx, captions, theme }) =
       flipX?: boolean;
     }
   > = {
-    0: { top: 240, left: 42, bubbleSide: 'right', label: 'ของดีบอกต่อ! ✨', sprite: 'mascot/wave.png' },
-    1: { top: 240, right: 112, bubbleSide: 'left', label: 'ดูจุดเด่นสิ! 👇', sprite: 'mascot/point.png', flipX: true },
-    2: { bottom: 580, left: 42, bubbleSide: 'right', label: 'ละมุนมาก 💕', sprite: 'mascot/love.png' },
-    3: { bottom: 625, right: 112, bubbleSide: 'left', label: 'จิ้มตะกร้าเลย! 🛒', sprite: 'mascot/basket.png' },
+    0: { top: 240, left: 42, bubbleSide: 'right', label: 'ของดีบอกต่อ! ✨', sprite: `mascot/${mascotId}/wave.png` },
+    1: { top: 240, right: 112, bubbleSide: 'left', label: 'ดูจุดเด่นสิ! 👇', sprite: `mascot/${mascotId}/point.png`, flipX: true },
+    2: { bottom: 580, left: 42, bubbleSide: 'right', label: SCENE3_LABELS[mascotId] || 'ของมันต้องมี! 💕', sprite: `mascot/${mascotId}/love.png` },
+    3: { bottom: 625, right: 112, bubbleSide: 'left', label: 'จิ้มตะกร้าเลย! 🛒', sprite: `mascot/${mascotId}/basket.png` },
   };
 
   const pos = positions[sceneIdx] || positions[0];
