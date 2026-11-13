@@ -423,16 +423,18 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               boxShadow: '0 16px 36px rgba(0,0,0,0.28)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 16 }}>
-              {props.originalPrice && props.originalPrice > props.price && (
-                <span style={{ fontSize: 32, color: theme.mutedText, textDecoration: 'line-through', fontWeight: 600 }}>
-                  ฿{props.originalPrice}
+            {props.price > 0 && (
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 16 }}>
+                {props.originalPrice && props.originalPrice > props.price && (
+                  <span style={{ fontSize: 32, color: theme.mutedText, textDecoration: 'line-through', fontWeight: 600 }}>
+                    ฿{props.originalPrice}
+                  </span>
+                )}
+                <span style={{ fontFamily: kanitFont, fontSize: 64, fontWeight: 800, color: theme.primary, lineHeight: 1.05 }}>
+                  ฿{props.price}
                 </span>
-              )}
-              <span style={{ fontFamily: kanitFont, fontSize: 64, fontWeight: 800, color: theme.primary, lineHeight: 1.05 }}>
-                ฿{props.price}
-              </span>
-            </div>
+              </div>
+            )}
             <div
               style={{
                 marginTop: 10,
