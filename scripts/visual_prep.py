@@ -36,9 +36,19 @@ def remove_near_white_bg(img: Image.Image, threshold: int = 242) -> Image.Image:
     return rgba
 
 
-def prepare_image(src: Path, out_dir: Path, prefix: str, cutout: bool = False, create_crops: bool = False) -> dict:
+def prepare_image(
+    src: Path,
+    out_dir: Path,
+    prefix: str,
+    cutout: bool = False,
+    create_crops: bool = False,
+    top_crop_pct: float = 0.0,
+) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     img = Image.open(src).convert("RGB")
+    if top_crop_pct > 0.0 and top_crop_pct < 0.5:
+        w0, h0 = img.size
+        img = img.crop((0, int(h0 * top_crop_pct), w0, h0))
     accent_hex = extract_accent_hex(img)
     outputs = []
 
@@ -76,9 +86,17 @@ def main():
     parser.add_argument("--prefix", required=True, help="Output filename prefix")
     parser.add_argument("--cutout", action="store_true", help="Remove near-white background to transparent PNG")
     parser.add_argument("--crops", action="store_true", help="Generate 2 spotlight detail crops")
+    parser.add_argument("--top-crop-pct", type=float, default=0.0, help="Trim top fraction (e.g. 0.06) to strip catalog header")
     args = parser.parse_args()
 
-    res = prepare_image(Path(args.src), Path(args.out_dir), args.prefix, args.cutout, args.crops)
+    res = prepare_image(
+        Path(args.src),
+        Path(args.out_dir),
+        args.prefix,
+        args.cutout,
+        args.crops,
+        args.top_crop_pct,
+    )
     print(json.dumps(res))
 
 

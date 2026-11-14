@@ -23,6 +23,49 @@
   "cta_text": "จิ้มตะกร้าด้านล่าง · ครบ 10 เฉดสี!",
   "themeId": "clean_pastel",
   "layoutVariant": "feature_carousel",
+  "staged_images": [
+    "products/129/hero_studio.jpg",
+    "products/129/model_clean.jpg",
+    "products/129/swatches_clean.jpg",
+    "products/129/grid_clean.jpg",
+    "products/129/lifestyle_vanity.jpg",
+    "products/129/model_clean.jpg",
+    "products/129/sponge_clean.jpg"
+  ],
+  "hero_fullbleed_image": "products/129/hero_fullbleed.jpg",
+  "hero_callout_image": "products/129/sponge_macro.jpg",
+  "hero_callout_label": "หัวฟองน้ำแตะ 3 วิ ✨",
+  "hero_badges": [
+    "💧 ฟองน้ำนุ่มฉ่ำ",
+    "✨ ครบ 10 เฉดสี",
+    "🌸 เกลี่ยง่ายไม่เป็นคราบ"
+  ],
+  "swatch_highlights": [
+    {
+      "label": "#02 ส้มพีช",
+      "hex": "#E98A68",
+      "xPct": 85.2,
+      "yPct": 44.5,
+      "startSec": 13.8,
+      "endSec": 15.8
+    },
+    {
+      "label": "#04 ชมพูตุ่น",
+      "hex": "#D67486",
+      "xPct": 65.2,
+      "yPct": 44.5,
+      "startSec": 15.8,
+      "endSec": 17.0
+    },
+    {
+      "label": "#09 ชิมเมอร์",
+      "hex": "#D47B9A",
+      "xPct": 16.0,
+      "yPct": 44.5,
+      "startSec": 17.0,
+      "endSec": 18.55
+    }
+  ],
   "raw_images": [
     "/home/antigravity/1.webp",
     "/home/antigravity/2.webp",

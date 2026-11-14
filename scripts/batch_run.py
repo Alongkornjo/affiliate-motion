@@ -52,22 +52,25 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
     layout_variant = product.get("layoutVariant") or LAYOUTS[idx % len(LAYOUTS)]
     mascot_id = product.get("mascotId") or pick_mascot_by_category(product.get("category", "ทั่วไป"))
 
-    # 1. Visual Prep + dominant color extraction
-    images = []
-    custom_accent = None
-    raw_images = product.get("raw_images", [])
-    for img_idx, raw_img in enumerate(raw_images, start=1):
-        out_json = run([
-            "python3", "scripts/visual_prep.py",
-            "--src", raw_img,
-            "--out-dir", "public",
-            "--prefix", f"{no}_vis_{img_idx}",
-            *(["--crops"] if len(raw_images) == 1 else []),
-        ])
-        vis = json.loads(out_json)
-        images.extend(vis["files"])
-        if img_idx == 1 and product.get("use_auto_accent"):
-            custom_accent = vis.get("accent_hex")
+    # 1. Visual Prep + dominant color extraction (or honor pre-staged images if provided)
+    top_crop_pct = float(product.get("top_crop_pct", 0.0))
+    images = list(product.get("staged_images", []))
+    custom_accent = product.get("custom_accent")
+    if not images:
+        raw_images = product.get("raw_images", [])
+        for img_idx, raw_img in enumerate(raw_images, start=1):
+            out_json = run([
+                "python3", "scripts/visual_prep.py",
+                "--src", raw_img,
+                "--out-dir", "public",
+                "--prefix", f"{no}_vis_{img_idx}",
+                *(["--top-crop-pct", str(top_crop_pct)] if top_crop_pct > 0 else []),
+                *(["--crops"] if len(raw_images) == 1 else []),
+            ])
+            vis = json.loads(out_json)
+            images.extend(vis["files"])
+            if img_idx == 1 and product.get("use_auto_accent"):
+                custom_accent = vis.get("accent_hex")
 
     # 2. Voiceover
     vo_rel = f"vo_{no}_{tier}.mp3"
@@ -106,6 +109,7 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "keyPoints": product.get("key_points", []),
         "spotlightTitle": product.get("spotlight_title"),
         "decisionHelper": product.get("decision_helper"),
+        "swatchHighlights": product.get("swatch_highlights"),
         "howToSteps": product.get("how_to_steps"),
         "ctaHeadline": product.get("cta_headline"),
         "ctaText": product.get("cta_text", "🛒 กดดูสินค้าจากตะกร้าได้เลย!"),
@@ -117,6 +121,10 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "mascotId": mascot_id,
         "customAccent": custom_accent,
         "images": images,
+        "heroFullBleedImage": product.get("hero_fullbleed_image"),
+        "heroCalloutImage": product.get("hero_callout_image"),
+        "heroCalloutLabel": product.get("hero_callout_label"),
+        "heroBadges": product.get("hero_badges"),
         "voiceoverFile": vo_rel,
         "captions": caps["lines"],
         "durationInSec": caps["duration_sec"] + 0.5,
@@ -137,12 +145,23 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "--browser-executable=/usr/bin/chromium",
     ])
 
+    # 5b. Normalize audio stream cleanly to -14 LUFS broadcast target (video stream copy)
+    norm_path = ROOT / "out" / f"#{no}_{tier}.norm.mp4"
+    run([
+        "ffmpeg", "-y", "-i", str(mp4_path),
+        "-c:v", "copy",
+        "-af", "loudnorm=I=-14:TP=-1.5:LRA=7",
+        "-c:a", "aac", "-b:a", "192k",
+        str(norm_path),
+    ])
+    norm_path.replace(mp4_path)
+
     # 6. Auto Cover Thumbnail
     cover_path = ROOT / "out" / f"#{no}_cover.jpg"
     run([
         "npx", "remotion", "still", str(bundle_dir), "ProductClip",
         str(cover_path),
-        "--frame=18",
+        "--frame=24",
         f"--props={props_path}",
         "--browser-executable=/usr/bin/chromium",
     ])

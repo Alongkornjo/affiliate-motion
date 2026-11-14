@@ -111,24 +111,24 @@ export const MascotNarrator: React.FC<Props> = ({
         }}
       />
 
-      {/* Gentle Floating Emotion Particles above Mascot */}
+      {/* Gentle Floating Emotion Particles beside Mascot (Safe inside Stage Bounds) */}
       {particles.map((emoji, idx) => {
         const cycle = (frame + idx * 22) % 60;
-        const pY = interpolate(cycle, [0, 60], [0, -72]);
-        const pOpacity = interpolate(cycle, [0, 12, 48, 60], [0, 0.92, 0.92, 0]);
-        const pX = idx === 0 ? -68 : idx === 1 ? 68 : -16;
+        const pY = interpolate(cycle, [0, 60], [0, -34]);
+        const pOpacity = interpolate(cycle, [0, 12, 46, 60], [0, 0.9, 0.9, 0]);
+        const pX = idx === 0 ? -74 : idx === 1 ? 58 : -12;
         return (
           <div
             key={`pt-${idx}`}
             style={{
               position: 'absolute',
-              top: isHeadMode ? 48 : 10,
+              top: isHeadMode ? 74 : 38,
               left: '50%',
               marginLeft: pX,
-              fontSize: 30,
+              fontSize: 24,
               opacity: pOpacity,
               transform: `translateY(${pY}px)`,
-              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
+              filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.2))',
             }}
           >
             {emoji}

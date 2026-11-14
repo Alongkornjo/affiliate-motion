@@ -170,7 +170,13 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
     Math.max(props.keyPoints.length - 1, 0)
   );
 
-  const spotMid = Math.floor((s2End + s3End) / 2);
+  const swatchMaxEndSec =
+    props.swatchHighlights && props.swatchHighlights.length > 0
+      ? Math.max(...props.swatchHighlights.map((s) => s.endSec))
+      : null;
+  const spotMid = swatchMaxEndSec
+    ? Math.min(Math.max(Math.round(swatchMaxEndSec * fps), s2End + 15), Math.max(s3End - 15, s2End + 1))
+    : Math.floor((s2End + s3End) / 2);
   const gridImages = [
     images[6] || images[1] || mainImg,
     images[1] || images[2] || mainImg,
@@ -207,10 +213,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         @font-face { font-family: 'MaliLocal'; src: url('${staticFile('fonts/Mali-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
       `}</style>
 
-      {/* Voiceover Track */}
-      {props.voiceoverFile && <Audio src={staticFile(props.voiceoverFile)} />}
+      {/* Voiceover Track (Boosted slightly to target -14 LUFS broadcast loudness) */}
+      {props.voiceoverFile && <Audio src={staticFile(props.voiceoverFile)} volume={1.12} />}
 
-      {/* Subtle Upbeat BGM + Procedural SFX Synced to Speech-Matched Scenes */}
+      {/* Subtle Upbeat BGM + Procedural SFX Synced to Speech-Matched Scenes & Swatches */}
       {props.enableSfx !== false && (
         <>
           <Audio src={staticFile('sfx/bgm_upbeat.wav')} loop volume={0.075} />
@@ -231,6 +237,16 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           <Sequence from={Math.max(s2End, 30)} durationInFrames={20}>
             <Audio src={staticFile('sfx/whoosh.wav')} volume={0.18} />
           </Sequence>
+          {props.swatchHighlights &&
+            props.swatchHighlights.map((sw, swIdx) => {
+              const swFrame = Math.max(Math.round(sw.startSec * fps), s2End + 2);
+              if (swFrame >= spotMid) return null;
+              return (
+                <Sequence key={`sfx-sw-${swIdx}`} from={swFrame} durationInFrames={16}>
+                  <Audio src={staticFile('sfx/pop.wav')} volume={0.16} />
+                </Sequence>
+              );
+            })}
           <Sequence from={Math.max(s3End, 45)} durationInFrames={28}>
             <Audio src={staticFile('sfx/sparkle.wav')} volume={0.22} />
           </Sequence>
@@ -513,19 +529,19 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 <div
                   style={{
                     position: 'absolute',
-                    top: 68,
+                    top: 58,
                     right: 6,
-                    width: 224,
-                    backgroundColor: 'rgba(255, 255, 255, 0.94)',
-                    borderRadius: 24,
-                    padding: 8,
-                    boxShadow: '0 16px 34px rgba(255, 61, 104, 0.24), 0 4px 12px rgba(0,0,0,0.12)',
-                    border: `2.5px solid ${theme.primary}66`,
+                    width: 244,
+                    backgroundColor: 'rgba(255, 255, 255, 0.96)',
+                    borderRadius: 26,
+                    padding: 9,
+                    boxShadow: '0 18px 36px rgba(255, 61, 104, 0.25), 0 4px 14px rgba(0,0,0,0.12)',
+                    border: '2.5px solid #FFFFFF',
                     transform: `translateY(${floatY * 0.8}px) scale(${interpolate(sideCardSpring, [0, 1], [0.75, 1])}) rotate(3deg)`,
                     zIndex: 14,
                   }}
                 >
-                  <div style={{ width: '100%', height: 152, borderRadius: 16, overflow: 'hidden' }}>
+                  <div style={{ width: '100%', height: 174, borderRadius: 18, overflow: 'hidden' }}>
                     <Img
                       src={staticFile(props.heroCalloutImage)}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center' }}
@@ -533,14 +549,15 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   </div>
                   <div
                     style={{
-                      marginTop: 6,
+                      marginTop: 7,
                       background: theme.ctaGradient,
                       color: '#FFFFFF',
                       borderRadius: 999,
-                      padding: '4px 10px',
-                      fontSize: 19,
-                      fontWeight: 700,
+                      padding: '5px 10px',
+                      fontSize: 22,
+                      fontWeight: 800,
                       textAlign: 'center',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {props.heroCalloutLabel || 'หัวฟองน้ำแตะ 3 วิ ✨'}
@@ -624,8 +641,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   />
                 )}
 
-                {/* Scene 3: Interactive Live Swatch Callout Ring + Badge synced to Voiceover */}
+                {/* Scene 3: Interactive Live Swatch Callout Ring + Badge strictly on Swatch Chart before spotMid */}
                 {isSpotlight &&
+                  frame < spotMid &&
                   props.swatchHighlights &&
                   props.swatchHighlights.map((sw, swIdx) => {
                     const isSwActive = currentTime >= sw.startSec && currentTime <= sw.endSec;
@@ -648,22 +666,22 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       >
                         <div
                           style={{
-                            width: 76,
-                            height: 76,
+                            width: 64,
+                            height: 64,
                             borderRadius: '50%',
                             border: '4px solid #FFFFFF',
-                            boxShadow: `0 0 0 5px ${sw.hex}, 0 10px 24px rgba(0,0,0,0.35)`,
+                            boxShadow: `0 0 0 4px ${sw.hex}, 0 10px 22px rgba(0,0,0,0.35)`,
                             backgroundColor: 'transparent',
                           }}
                         />
                         <div
                           style={{
-                            marginTop: 10,
+                            marginTop: 8,
                             background: theme.ctaGradient,
                             color: '#FFFFFF',
-                            padding: '6px 16px',
+                            padding: '5px 14px',
                             borderRadius: 999,
-                            fontSize: 22,
+                            fontSize: 21,
                             fontWeight: 800,
                             whiteSpace: 'nowrap',
                             boxShadow: '0 8px 20px rgba(0,0,0,0.28)',
@@ -834,7 +852,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
 
-          {/* Scene 2: Flush-Aligned Feature Checklist (Zero Right-Edge Protrusion) */}
+          {/* Scene 2: Flush-Aligned Feature Checklist (Zero-Void Fast Stagger Entry) */}
           {isGrid && (
             <div
               style={{
@@ -850,11 +868,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               {props.keyPoints.slice(0, 3).map((pt, idx) => {
                 const isActive = idx === activePointIdx;
                 const enterSpring = spring({
-                  frame: Math.max(frame - s1End - idx * 7, 0),
+                  frame: Math.max(frame - s1End - idx * 3, 0),
                   fps,
-                  config: { damping: 14, stiffness: 140 },
+                  config: { damping: 14, stiffness: 165 },
                 });
-                const enterY = interpolate(enterSpring, [0, 1], [24, 0]);
+                const enterY = interpolate(enterSpring, [0, 1], [16, 0]);
                 return (
                   <div
                     key={`kp-${idx}`}
@@ -873,7 +891,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 14,
-                      opacity: enterSpring * (isActive ? 1 : 0.84),
+                      opacity: interpolate(enterSpring, [0, 1], [0.35, isActive ? 1 : 0.86]),
                       boxShadow: isActive
                         ? '0 12px 28px rgba(255, 61, 104, 0.25)'
                         : '0 6px 16px rgba(0, 0, 0, 0.05)',
@@ -918,9 +936,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       </div>
 
-      {/* Scene 4: Vibrant Pulsing Conversion CTA Button with Shimmer Sweep & Platform Safe Zone */}
+      {/* Scene 4: Vibrant Pulsing Conversion CTA Button with Shimmer Sweep & Downward Pointer */}
       {isCta && (() => {
         const shimmerPos = (((frame - s3End) * 3.2) % 180) - 40;
+        const arrowBounce = Math.sin((frame - s3End) / 4.2) * 3.5;
         return (
           <div
             style={{
@@ -970,6 +989,20 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 <line x1="14" y1="14" x2="14" y2="16" />
               </svg>
               <span>{cleanCtaText}</span>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ transform: `translateY(${arrowBounce}px)`, flexShrink: 0 }}
+              >
+                <path d="M12 5v14" />
+                <path d="M18 13l-6 6-6-6" />
+              </svg>
             </div>
           </div>
         );
