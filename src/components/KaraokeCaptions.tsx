@@ -88,12 +88,12 @@ export const KaraokeCaptions: React.FC<Props> = ({
         style={{
           position: 'relative',
           width: 'fit-content',
-          minWidth: 460,
+          minWidth: 540,
           maxWidth: '100%',
           backgroundColor: theme.captionBg,
           backdropFilter: 'blur(16px)',
           borderRadius: 28,
-          padding: '16px 26px',
+          padding: '16px 28px',
           boxShadow: theme.isDark
             ? '0 14px 36px rgba(0, 0, 0, 0.38)'
             : '0 14px 34px rgba(255, 77, 109, 0.14), 0 4px 14px rgba(0, 0, 0, 0.06)',
@@ -101,10 +101,10 @@ export const KaraokeCaptions: React.FC<Props> = ({
             ? '1.5px solid rgba(255, 255, 255, 0.16)'
             : '1.5px solid rgba(255, 255, 255, 0.88)',
           textAlign: 'center',
-          lineHeight: 1.42,
+          lineHeight: 1.38,
         }}
       >
-        <span style={{ fontSize: 35, fontWeight: 700, letterSpacing: 0 }}>
+        <span style={{ fontSize: 42, fontWeight: 700, letterSpacing: 0 }}>
           {activeLine.words.map((w, idx) => {
             const isSpoken = currentTime >= w.start - 0.04 && currentTime <= w.end + 0.06;
             const prev = idx > 0 ? activeLine.words[idx - 1].word : '';

@@ -18,31 +18,38 @@ import { CaptionLine, ProductClipProps } from '../types';
 const bodyFont = 'MitrLocal';
 const headlineFont = 'MaliLocal';
 
-/** Blurred-glass backdrop + crisp full-frame product image so text/swatches are never cropped */
-const ProductStageImage: React.FC<{ src: string; zoom?: number }> = ({ src, zoom = 1 }) => (
+/** Blurred-glass backdrop + crisp full-frame product image (or clean cover for borderless lifestyle photos) */
+const ProductStageImage: React.FC<{ src: string; zoom?: number; fit?: 'contain' | 'cover' }> = ({
+  src,
+  zoom = 1,
+  fit = 'contain',
+}) => (
   <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-    <Img
-      src={staticFile(src)}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        transform: 'scale(1.18)',
-        filter: 'blur(26px) brightness(0.88)',
-        opacity: 0.72,
-      }}
-    />
+    {fit === 'contain' && (
+      <Img
+        src={staticFile(src)}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          transform: 'scale(1.18)',
+          filter: 'blur(26px) brightness(0.88)',
+          opacity: 0.72,
+        }}
+      />
+    )}
     <Img
       src={staticFile(src)}
       style={{
         position: 'relative',
         width: '100%',
         height: '100%',
-        objectFit: 'contain',
+        objectFit: fit,
+        objectPosition: fit === 'cover' ? 'center 58%' : 'center',
         transform: `scale(${zoom})`,
-        filter: 'drop-shadow(0 10px 24px rgba(0,0,0,0.16))',
+        filter: fit === 'contain' ? 'drop-shadow(0 10px 24px rgba(0,0,0,0.16))' : 'none',
       }}
     />
   </div>
@@ -402,19 +409,19 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top + 8,
+          top: SAFE_ZONES.top + 6,
           bottom: isCta ? 545 : 495,
           left: 48,
           right: 48,
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: isHero ? 'space-between' : 'center',
           alignItems: 'center',
-          gap: 14,
+          gap: 18,
           zIndex: 10,
         }}
       >
-        {/* Top Dynamic Headline Pill (Soft Rounded Glass) */}
+        {/* Top Dynamic Headline Pill (2-line Hero Display in Scene 1, Clean Glass in Scenes 2-4) */}
         <div
           style={{
             transform: `scale(${interpolate(hookSpring, [0, 1], [0.88, 1])})`,
@@ -422,16 +429,25 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             backdropFilter: 'blur(14px)',
             border: isHero ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
             color: isHero ? theme.badgeText : theme.text,
-            padding: '15px 26px',
+            padding: isHero ? '18px 28px' : '15px 26px',
             borderRadius: 28,
             textAlign: 'center',
             boxShadow: isHero
               ? '0 14px 32px rgba(255, 61, 104, 0.24)'
               : '0 10px 28px rgba(0, 0, 0, 0.08)',
             width: '100%',
+            flexShrink: 0,
           }}
         >
-          <div style={{ fontFamily: headlineFont, fontSize: 35, fontWeight: 700, lineHeight: 1.25 }}>
+          <div
+            style={{
+              fontFamily: headlineFont,
+              fontSize: isHero ? 44 : 38,
+              fontWeight: 700,
+              lineHeight: 1.28,
+              whiteSpace: 'pre-line',
+            }}
+          >
             {isHero
               ? props.hookText
               : isGrid
@@ -442,62 +458,45 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           </div>
         </div>
 
-        {/* Center Visual Stage: Full-Bleed Hero Chips vs Feature Grid vs Spotlight */}
+        {/* Center Visual Stage: Full-Bleed Hero Strip vs Feature Grid vs Spotlight */}
         <div
           style={{
             position: 'relative',
             width: '100%',
             flex: 1,
+            minHeight: 0,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: 12,
+            justifyContent: isHero ? 'flex-end' : 'center',
+            gap: 14,
           }}
         >
-          {/* Scene 1 Full-Bleed Mode: Floating Feature Chips around the Hero Bottle */}
+          {/* Scene 1 Full-Bleed Mode: 1 Unified Balanced Feature Strip */}
           {isHero && props.heroFullBleedImage ? (
-            <div style={{ position: 'relative', width: '100%', height: '100%', pointerEvents: 'none' }}>
+            <div
+              style={{
+                width: 'fit-content',
+                maxWidth: '100%',
+                backgroundColor: theme.captionBg,
+                backdropFilter: 'blur(16px)',
+                border: `1.5px solid ${theme.surfaceBorder}`,
+                color: theme.text,
+                padding: '12px 26px',
+                borderRadius: 999,
+                fontSize: 25,
+                fontWeight: 700,
+                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
+                marginBottom: 14,
+                transform: `scale(${interpolate(sideCardSpring, [0, 1], [0.85, 1])})`,
+              }}
+            >
               {(props.heroBadges && props.heroBadges.length > 0
                 ? props.heroBadges
                 : ['💧 หัวฟองน้ำนุ่มฉ่ำ', '✨ 10 เฉดสีละมุน', '🌸 ไม่เป็นคราบ']
               )
                 .slice(0, 3)
-                .map((badge, bIdx) => {
-                  const positions = [
-                    { top: 44, left: 10 },
-                    { top: 150, right: 8 },
-                    { bottom: 80, right: 16 },
-                  ];
-                  const pos = positions[bIdx] || positions[0];
-                  const chipSpring = spring({
-                    frame: Math.max(frame - 10 - bIdx * 6, 0),
-                    fps,
-                    config: { damping: 14, stiffness: 135 },
-                  });
-                  return (
-                    <div
-                      key={`hbadge-${bIdx}`}
-                      style={{
-                        position: 'absolute',
-                        ...pos,
-                        backgroundColor: theme.captionBg,
-                        backdropFilter: 'blur(14px)',
-                        border: `1.5px solid ${theme.surfaceBorder}`,
-                        color: theme.text,
-                        padding: '10px 20px',
-                        borderRadius: 999,
-                        fontSize: 23,
-                        fontWeight: 700,
-                        boxShadow: '0 10px 24px rgba(0, 0, 0, 0.10)',
-                        transform: `translateY(${Math.sin((frame + bIdx * 18) / 14) * 5}px) scale(${chipSpring})`,
-                        opacity: chipSpring,
-                      }}
-                    >
-                      {badge}
-                    </div>
-                  );
-                })}
+                .join('  ·  ')}
             </div>
           ) : (
             <>
@@ -539,18 +538,25 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 </>
               )}
 
-              {/* Main Center Product Frame (Full-frame contain + blurred glass backdrop) */}
+              {/* Main Center Product Frame */}
               <div
                 style={{
                   position: 'relative',
                   width: isHero && images.length > 1 ? '76%' : '100%',
-                  height: isGrid ? '58%' : isSpotlight && props.decisionHelper ? '90%' : isCta && props.howToSteps?.length ? '88%' : '100%',
-                  alignSelf: isGrid ? 'flex-start' : 'center',
+                  flex: isGrid ? 1 : undefined,
+                  minHeight: isGrid ? 0 : undefined,
+                  height: isGrid
+                    ? undefined
+                    : isSpotlight && props.decisionHelper
+                    ? '87%'
+                    : isCta && props.howToSteps?.length
+                    ? '87%'
+                    : '100%',
                   borderRadius: 32,
                   overflow: 'hidden',
                   backgroundColor: theme.surface,
                   border: `2px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 22px 48px rgba(0, 0, 0, 0.20)',
+                  boxShadow: '0 22px 48px rgba(0, 0, 0, 0.18)',
                   transform: `translateY(${floatY}px)`,
                   zIndex: 10,
                 }}
@@ -559,6 +565,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   <ProductStageImage
                     src={currentImg}
                     zoom={isSpotlight ? kenBurnsScale * 1.02 : kenBurnsScale}
+                    fit={isGrid && currentImg.includes('products/') ? 'cover' : 'contain'}
                   />
                 )}
 
@@ -584,23 +591,24 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </>
           )}
 
-          {/* Scene 3: Shade Decision Helper Pill (Soft Glass) */}
+          {/* Scene 3: Prominent Shade Decision Helper Callout Pill */}
           {isSpotlight && props.decisionHelper && (
             <div
               style={{
                 width: 'fit-content',
                 maxWidth: '100%',
-                backgroundColor: theme.surface,
-                backdropFilter: 'blur(12px)',
-                border: `1.5px solid ${theme.surfaceBorder}`,
+                backgroundColor: theme.captionBg,
+                backdropFilter: 'blur(14px)',
+                border: `2px solid ${theme.primary}44`,
                 color: theme.text,
                 borderRadius: 999,
-                padding: '12px 24px',
-                fontSize: 24,
+                padding: '14px 30px',
+                fontSize: 28,
                 fontWeight: 700,
                 textAlign: 'center',
-                boxShadow: '0 10px 26px rgba(255, 77, 109, 0.12)',
+                boxShadow: '0 12px 28px rgba(255, 77, 109, 0.16)',
                 zIndex: 12,
+                flexShrink: 0,
               }}
             >
               {props.decisionHelper}
@@ -616,6 +624,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 justifyContent: 'space-between',
                 gap: 10,
                 zIndex: 12,
+                flexShrink: 0,
               }}
             >
               {props.howToSteps.slice(0, 3).map((step, sIdx) => (
@@ -632,7 +641,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 8,
-                    fontSize: 21,
+                    fontSize: 22,
                     fontWeight: 700,
                     color: theme.text,
                     boxShadow: '0 8px 20px rgba(0,0,0,0.07)',
@@ -663,20 +672,17 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
 
-          {/* Scene 2: Staggered Feature Checklist with Soft Glass Cards */}
+          {/* Scene 2: Staggered Feature Checklist in Clean Flex Flow (No Image Overlap) */}
           {isGrid && (
             <div
               style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '39%',
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                gap: 12,
+                gap: 10,
                 zIndex: 12,
+                flexShrink: 0,
               }}
             >
               {props.keyPoints.slice(0, 3).map((pt, idx) => {
@@ -698,7 +704,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       border: isActive ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
                       borderRadius: 22,
                       padding: '13px 20px',
-                      fontSize: 27,
+                      fontSize: 28,
                       fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
@@ -707,7 +713,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                       boxShadow: isActive
                         ? '0 12px 28px rgba(255, 61, 104, 0.25)'
                         : '0 6px 18px rgba(0, 0, 0, 0.06)',
-                      transform: `translateY(${enterY}px) translateX(${isActive ? 10 : 0}px) scale(${isActive ? 1.02 : 0.98})`,
+                      transform: `translateY(${enterY}px) translateX(${isActive ? 8 : 0}px) scale(${isActive ? 1.015 : 0.99})`,
                     }}
                   >
                     <span
