@@ -24,10 +24,12 @@
 
 ## 2. ขั้นตอนการผลิตคลิป (5 ขั้นตอนจบ)
 
-1. **เตรียมข้อมูลสินค้า (`data/product_<NO>.json`)**
-   - ระบุข้อมูลสินค้า, ราคา, หมวดหมู่ (`category` เพื่อเลือกมาสคอต `mini` / `max` / `sky_cat` / `star_bear` อัตโนมัติ), บทพากย์ `narration_short` / `narration_long`, `brand_label`, `hook_text`, `hero_badges`, `key_points`, `how_to_steps`, และ `swatch_highlights` (ถ้ามี)
-2. **เตรียมภาพสะอาด (`public/products/<NO>/`)**
-   - ใช้ `scripts/visual_prep.py --top-crop-pct 0.06` เพื่อตัดขอบข้อความ/ลายน้ำแคตตาล็อกด้านบน หรือจัดเตรียมภาพครอปสะอาด (`hero_fullbleed.jpg`, Macro PiP, `swatches_clean.jpg`, `model_clean.jpg`, `grid_clean.jpg`)
+1. **โยนรูปเข้า Input (`TEMPLATE_INPUT` หรือส่งรูปในแชท)**
+   - แค่โยนรูปสินค้า 3–10 รูปลงในโฟลเดอร์ที่ก๊อปปี้จาก `TEMPLATE_INPUT` (ตั้งชื่อ เช่น `#130_ชื่อสินค้า`) — ไฟล์ `brief.txt` ใส่เฉพาะที่มีหรือไม่ใส่เลยก็ได้
+   - ระบบจะอ่านข้อมูลแบรนด์ รุ่น เฉดสี และจุดเด่นจากรูปด้วยสายตา แล้วตัดสินใจเลือก Theme, มาสคอต, และบทพากย์/ข้อความบนจอทั้งหมดให้เอง ([`template/README.md`](template/README.md))
+2. **คัดและอัปเกรดภาพสะอาด (`public/products/<NO>/`)**
+   - รูปที่ใช้ได้ → ครอปตัดขอบข้อความ/ลายน้ำ (`scripts/visual_prep.py --top-crop-pct 0.06` หรือครอปเฉพาะจุด Macro/สวอช/นางแบบ)
+   - รูปที่ไม่สวย/ตัวหนังสือรก → ระบบสั่ง AI เจนภาพ `9:16` ใหม่ (`hero_fullbleed.jpg` / `lifestyle`) ให้เนียนระดับโฆษณา
 3. **รัน Pipeline อัตโนมัติคำสั่งเดียว (`scripts/batch_run.py`)**
    ```bash
    python3 scripts/batch_run.py data/product_<NO>.json --tier short --cta-mode basket
