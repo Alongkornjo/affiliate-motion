@@ -67,9 +67,9 @@ export const KaraokeCaptions: React.FC<Props> = ({
         style={{
           background: theme.ctaGradient,
           color: '#FFFFFF',
-          padding: '6px 18px',
+          padding: '7px 20px',
           borderRadius: 999,
-          fontSize: 21,
+          fontSize: 24,
           fontWeight: 700,
           boxShadow: '0 6px 16px rgba(0, 0, 0, 0.14)',
           marginBottom: 8,

@@ -377,13 +377,13 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         }}
       />
 
-      {/* Category Pill inside Top Safe Zone (no channel watermark) */}
+      {/* Category Pill inside Top Safe Zone (Balanced & Readable) */}
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top - 52,
-          left: SAFE_ZONES.left,
-          right: SAFE_ZONES.right,
+          top: 86,
+          left: 48,
+          right: 48,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -392,16 +392,18 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       >
         <div
           style={{
-            backgroundColor: theme.surface,
+            backgroundColor: theme.captionBg,
+            backdropFilter: 'blur(12px)',
             border: `1.5px solid ${theme.surfaceBorder}`,
             color: theme.text,
-            padding: '7px 18px',
+            padding: '10px 26px',
             borderRadius: 999,
-            fontSize: 22,
-            fontWeight: 600,
+            fontSize: 28,
+            fontWeight: 700,
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.08)',
           }}
         >
-          ✨ ของแท้ · {props.category}
+          ✨ ของแท้ · {props.category.includes('/') ? props.category.split('/').pop()?.trim() : props.category}
         </div>
       </div>
 
@@ -409,7 +411,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top + 6,
+          top: SAFE_ZONES.top + 12,
           bottom: isCta ? 545 : 495,
           left: 48,
           right: 48,
@@ -482,9 +484,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 backdropFilter: 'blur(16px)',
                 border: `1.5px solid ${theme.surfaceBorder}`,
                 color: theme.text,
-                padding: '12px 26px',
+                padding: '13px 28px',
                 borderRadius: 999,
-                fontSize: 25,
+                fontSize: 28,
                 fontWeight: 700,
                 boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
                 marginTop: 4,
