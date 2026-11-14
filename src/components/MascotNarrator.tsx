@@ -86,10 +86,10 @@ export const MascotNarrator: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: 235,
-        left: 20,
-        width: 245,
-        height: 325,
+        bottom: 260,
+        left: 24,
+        width: 240,
+        height: 320,
         zIndex: 35,
         pointerEvents: 'none',
         display: 'flex',

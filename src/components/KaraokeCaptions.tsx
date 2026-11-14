@@ -52,9 +52,9 @@ export const KaraokeCaptions: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: 248,
-        left: 268,
-        right: 48,
+        bottom: 268,
+        left: 266,
+        right: 104,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',

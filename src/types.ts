@@ -23,6 +23,15 @@ export interface CaptionLine {
   words: CaptionWord[];
 }
 
+export interface SwatchHighlight {
+  label: string;
+  hex: string;
+  xPct: number;
+  yPct: number;
+  startSec: number;
+  endSec: number;
+}
+
 export type ProductClipProps = {
   no: string;
   productName: string;
@@ -37,6 +46,7 @@ export type ProductClipProps = {
   keyPoints: string[];
   spotlightTitle?: string;
   decisionHelper?: string;
+  swatchHighlights?: SwatchHighlight[];
   howToSteps?: string[];
   ctaHeadline?: string;
   ctaText: string;
@@ -49,6 +59,8 @@ export type ProductClipProps = {
   customAccent?: string;
   images: string[];
   heroFullBleedImage?: string;
+  heroCalloutImage?: string;
+  heroCalloutLabel?: string;
   heroBadges?: string[];
   voiceoverFile: string;
   captions: CaptionLine[];

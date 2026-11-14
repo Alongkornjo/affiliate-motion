@@ -131,13 +131,23 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
   const isCta = frame >= s3End;
 
   const sceneIdx = isHero ? 0 : isGrid ? 1 : isSpotlight ? 2 : 3;
+  const sceneStartFrame = isHero ? 0 : isGrid ? s1End : isSpotlight ? s2End : s3End;
+  const currentTime = frame / fps;
 
   const hookSpring = spring({ frame, fps, config: { damping: 12, stiffness: 165 } });
   const sideCardSpring = spring({ frame: Math.max(frame - 6, 0), fps, config: { damping: 13, stiffness: 130 } });
+  const sceneEnter = spring({
+    frame: Math.max(frame - sceneStartFrame, 0),
+    fps,
+    config: { damping: 15, stiffness: 145 },
+  });
   const ctaSpring = spring({ frame: Math.max(frame - s3End, 0), fps, config: { damping: 12, stiffness: 150 } });
 
   // Gentle 1.0 -> 1.04 Ken Burns so full product edges stay visible
   const kenBurnsScale = interpolate(frame, [0, durationInFrames], [1.0, 1.04], {
+    extrapolateRight: 'clamp',
+  });
+  const heroScale = interpolate(frame, [0, Math.max(s1End, 1)], [1.10, 1.16], {
     extrapolateRight: 'clamp',
   });
   const floatY = Math.sin(frame / 16) * 5;
@@ -276,7 +286,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              transform: `scale(${kenBurnsScale})`,
+              objectPosition: 'center 56%',
+              transform: `scale(${heroScale})`,
+              transformOrigin: '50% 62%',
             }}
           />
           {/* Soft Top & Bottom Vignettes so Headline and Mascot/Captions pop cleanly */}
@@ -382,14 +394,14 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         style={{
           position: 'absolute',
           top: 148,
-          bottom: isCta ? 545 : 495,
+          bottom: isCta ? 565 : 515,
           left: 48,
           right: 48,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: isHero ? 'space-between' : 'center',
           alignItems: 'center',
-          gap: 18,
+          gap: 16,
           zIndex: 10,
         }}
       >
@@ -469,31 +481,72 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             gap: 14,
           }}
         >
-          {/* Scene 1 Full-Bleed Mode: 1 Unified Balanced Feature Strip tucked neatly under Hook */}
+          {/* Scene 1 Full-Bleed Mode: Unified Feature Strip + Floating Sponge/Result PiP Card */}
           {isHero && props.heroFullBleedImage ? (
-            <div
-              style={{
-                width: 'fit-content',
-                maxWidth: '100%',
-                backgroundColor: theme.captionBg,
-                backdropFilter: 'blur(16px)',
-                border: `1.5px solid ${theme.surfaceBorder}`,
-                color: theme.text,
-                padding: '13px 28px',
-                borderRadius: 999,
-                fontSize: 28,
-                fontWeight: 700,
-                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
-                marginTop: 4,
-                transform: `scale(${interpolate(sideCardSpring, [0, 1], [0.85, 1])})`,
-              }}
-            >
-              {(props.heroBadges && props.heroBadges.length > 0
-                ? props.heroBadges
-                : ['💧 หัวฟองน้ำนุ่มฉ่ำ', '✨ 10 เฉดสีละมุน', '🌸 ไม่เป็นคราบ']
-              )
-                .slice(0, 3)
-                .join('  ·  ')}
+            <div style={{ position: 'relative', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div
+                style={{
+                  width: 'fit-content',
+                  maxWidth: '100%',
+                  backgroundColor: theme.captionBg,
+                  backdropFilter: 'blur(16px)',
+                  border: `1.5px solid ${theme.surfaceBorder}`,
+                  color: theme.text,
+                  padding: '13px 28px',
+                  borderRadius: 999,
+                  fontSize: 28,
+                  fontWeight: 700,
+                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
+                  marginTop: 4,
+                  transform: `scale(${interpolate(sideCardSpring, [0, 1], [0.85, 1])})`,
+                }}
+              >
+                {(props.heroBadges && props.heroBadges.length > 0
+                  ? props.heroBadges
+                  : ['💧 หัวฟองน้ำนุ่มฉ่ำ', '✨ 10 เฉดสีละมุน', '🌸 ไม่เป็นคราบ']
+                )
+                  .slice(0, 3)
+                  .join('  ·  ')}
+              </div>
+
+              {props.heroCalloutImage && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 68,
+                    right: 6,
+                    width: 224,
+                    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                    borderRadius: 24,
+                    padding: 8,
+                    boxShadow: '0 16px 34px rgba(255, 61, 104, 0.24), 0 4px 12px rgba(0,0,0,0.12)',
+                    border: `2.5px solid ${theme.primary}66`,
+                    transform: `translateY(${floatY * 0.8}px) scale(${interpolate(sideCardSpring, [0, 1], [0.75, 1])}) rotate(3deg)`,
+                    zIndex: 14,
+                  }}
+                >
+                  <div style={{ width: '100%', height: 152, borderRadius: 16, overflow: 'hidden' }}>
+                    <Img
+                      src={staticFile(props.heroCalloutImage)}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center' }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 6,
+                      background: theme.ctaGradient,
+                      color: '#FFFFFF',
+                      borderRadius: 999,
+                      padding: '4px 10px',
+                      fontSize: 19,
+                      fontWeight: 700,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {props.heroCalloutLabel || 'หัวฟองน้ำแตะ 3 วิ ✨'}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <>
@@ -535,37 +588,93 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 </>
               )}
 
-              {/* Main Center Product Frame */}
+              {/* Main Center Product Frame (Full-Width Balanced across Scenes 2, 3, and 4) */}
               <div
                 style={{
                   position: 'relative',
-                  width: isHero && images.length > 1 ? '76%' : isCta ? 860 : '100%',
+                  width: isHero && images.length > 1 ? '76%' : '100%',
                   maxWidth: '100%',
-                  flex: isGrid ? 1 : undefined,
-                  minHeight: isGrid ? 0 : undefined,
-                  height: isGrid
-                    ? undefined
-                    : isSpotlight && props.decisionHelper
-                    ? '87%'
-                    : isCta && props.howToSteps?.length
-                    ? 860
-                    : '100%',
+                  flex: isGrid || isCta || (isSpotlight && props.decisionHelper) ? 1 : undefined,
+                  minHeight: 0,
+                  height:
+                    isGrid || isCta || (isSpotlight && props.decisionHelper)
+                      ? undefined
+                      : '100%',
                   borderRadius: 32,
                   overflow: 'hidden',
                   backgroundColor: theme.surface,
                   border: `2px solid ${theme.surfaceBorder}`,
                   boxShadow: '0 22px 48px rgba(0, 0, 0, 0.18)',
-                  transform: `translateY(${floatY}px)`,
+                  opacity: interpolate(sceneEnter, [0, 1], [0.35, 1]),
+                  transform: `translateY(${floatY + interpolate(sceneEnter, [0, 1], [18, 0])}px) scale(${interpolate(sceneEnter, [0, 1], [0.97, 1])})`,
                   zIndex: 10,
                 }}
               >
                 {currentImg && (
                   <ProductStageImage
                     src={currentImg}
-                    zoom={isSpotlight ? kenBurnsScale * 1.02 : kenBurnsScale}
-                    fit={isGrid && currentImg.includes('products/') ? 'cover' : 'contain'}
+                    zoom={isSpotlight ? kenBurnsScale * 1.015 : kenBurnsScale}
+                    fit={
+                      (isGrid && currentImg.includes('products/')) ||
+                      isCta ||
+                      (isSpotlight && currentImg.includes('products/'))
+                        ? 'cover'
+                        : 'contain'
+                    }
                   />
                 )}
+
+                {/* Scene 3: Interactive Live Swatch Callout Ring + Badge synced to Voiceover */}
+                {isSpotlight &&
+                  props.swatchHighlights &&
+                  props.swatchHighlights.map((sw, swIdx) => {
+                    const isSwActive = currentTime >= sw.startSec && currentTime <= sw.endSec;
+                    if (!isSwActive) return null;
+                    const pulse = 1 + Math.sin(frame / 4) * 0.08;
+                    return (
+                      <div
+                        key={`sw-pin-${swIdx}`}
+                        style={{
+                          position: 'absolute',
+                          left: `${sw.xPct}%`,
+                          top: `${sw.yPct}%`,
+                          transform: `translate(-50%, -50%) scale(${pulse})`,
+                          zIndex: 18,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 76,
+                            height: 76,
+                            borderRadius: '50%',
+                            border: '4px solid #FFFFFF',
+                            boxShadow: `0 0 0 5px ${sw.hex}, 0 10px 24px rgba(0,0,0,0.35)`,
+                            backgroundColor: 'transparent',
+                          }}
+                        />
+                        <div
+                          style={{
+                            marginTop: 10,
+                            background: theme.ctaGradient,
+                            color: '#FFFFFF',
+                            padding: '6px 16px',
+                            borderRadius: 999,
+                            fontSize: 22,
+                            fontWeight: 800,
+                            whiteSpace: 'nowrap',
+                            boxShadow: '0 8px 20px rgba(0,0,0,0.28)',
+                            border: '2px solid #FFFFFF',
+                          }}
+                        >
+                          {sw.label}
+                        </div>
+                      </div>
+                    );
+                  })}
 
                 {discount > 0 && (
                   <div
@@ -589,29 +698,84 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </>
           )}
 
-          {/* Scene 3: Prominent Shade Decision Helper Callout Pill */}
-          {isSpotlight && props.decisionHelper && (
-            <div
-              style={{
-                width: 'fit-content',
-                maxWidth: '100%',
-                backgroundColor: theme.captionBg,
-                backdropFilter: 'blur(14px)',
-                border: `2px solid ${theme.primary}44`,
-                color: theme.text,
-                borderRadius: 999,
-                padding: '14px 30px',
-                fontSize: 28,
-                fontWeight: 700,
-                textAlign: 'center',
-                boxShadow: '0 12px 28px rgba(255, 77, 109, 0.16)',
-                zIndex: 12,
-                flexShrink: 0,
-              }}
-            >
-              {props.decisionHelper}
-            </div>
-          )}
+          {/* Scene 3: Interactive Shade Decision Helper Chips (or Fallback Pill) */}
+          {isSpotlight &&
+            (props.swatchHighlights && props.swatchHighlights.length > 0 ? (
+              <div
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 12,
+                  zIndex: 12,
+                  flexShrink: 0,
+                }}
+              >
+                {props.swatchHighlights.map((sw, swIdx) => {
+                  const isSwActive = currentTime >= sw.startSec && currentTime <= sw.endSec;
+                  return (
+                    <div
+                      key={`sw-chip-${swIdx}`}
+                      style={{
+                        flex: 1,
+                        background: isSwActive ? theme.ctaGradient : theme.captionBg,
+                        backdropFilter: 'blur(12px)',
+                        border: isSwActive ? '2px solid #FFFFFF' : `1.5px solid ${theme.primary}44`,
+                        color: isSwActive ? '#FFFFFF' : theme.text,
+                        borderRadius: 999,
+                        padding: '11px 14px',
+                        fontSize: 24,
+                        fontWeight: 700,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 10,
+                        boxShadow: isSwActive
+                          ? '0 10px 24px rgba(255, 61, 104, 0.30)'
+                          : '0 8px 18px rgba(0, 0, 0, 0.08)',
+                        transform: isSwActive ? 'scale(1.03)' : 'scale(1)',
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: '50%',
+                          backgroundColor: sw.hex,
+                          border: '2px solid #FFFFFF',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.18)',
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span style={{ whiteSpace: 'nowrap' }}>{sw.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              props.decisionHelper && (
+                <div
+                  style={{
+                    width: 'fit-content',
+                    maxWidth: '100%',
+                    backgroundColor: theme.captionBg,
+                    backdropFilter: 'blur(14px)',
+                    border: `2px solid ${theme.primary}44`,
+                    color: theme.text,
+                    borderRadius: 999,
+                    padding: '14px 30px',
+                    fontSize: 28,
+                    fontWeight: 700,
+                    textAlign: 'center',
+                    boxShadow: '0 12px 28px rgba(255, 77, 109, 0.16)',
+                    zIndex: 12,
+                    flexShrink: 0,
+                  }}
+                >
+                  {props.decisionHelper}
+                </div>
+              )
+            ))}
 
           {/* Scene 4: 3-Second How-To Steps Strip (Soft Rounded Pills) */}
           {isCta && props.howToSteps && props.howToSteps.length > 0 && (
@@ -670,7 +834,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             </div>
           )}
 
-          {/* Scene 2: Staggered Feature Checklist in Clean Flex Flow (No Image Overlap) */}
+          {/* Scene 2: Flush-Aligned Feature Checklist (Zero Right-Edge Protrusion) */}
           {isGrid && (
             <div
               style={{
@@ -678,7 +842,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                gap: 10,
+                gap: 8,
                 zIndex: 12,
                 flexShrink: 0,
               }}
@@ -690,34 +854,36 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   fps,
                   config: { damping: 14, stiffness: 140 },
                 });
-                const enterY = interpolate(enterSpring, [0, 1], [28, 0]);
+                const enterY = interpolate(enterSpring, [0, 1], [24, 0]);
                 return (
                   <div
                     key={`kp-${idx}`}
                     style={{
                       position: 'relative',
+                      width: '100%',
+                      boxSizing: 'border-box',
                       background: isActive ? theme.ctaGradient : theme.surface,
                       backdropFilter: 'blur(12px)',
                       color: isActive ? '#FFFFFF' : theme.text,
-                      border: isActive ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
-                      borderRadius: 22,
-                      padding: '13px 20px',
-                      fontSize: 28,
+                      border: isActive ? '2px solid #FFFFFF' : `1.5px solid ${theme.surfaceBorder}`,
+                      borderRadius: 20,
+                      padding: isActive ? '12px 20px' : '9px 18px',
+                      fontSize: isActive ? 28 : 24,
                       fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
                       gap: 14,
-                      opacity: enterSpring,
+                      opacity: enterSpring * (isActive ? 1 : 0.84),
                       boxShadow: isActive
                         ? '0 12px 28px rgba(255, 61, 104, 0.25)'
-                        : '0 6px 18px rgba(0, 0, 0, 0.06)',
-                      transform: `translateY(${enterY}px) translateX(${isActive ? 8 : 0}px) scale(${isActive ? 1.015 : 0.99})`,
+                        : '0 6px 16px rgba(0, 0, 0, 0.05)',
+                      transform: `translateY(${enterY}px)`,
                     }}
                   >
                     <span
                       style={{
-                        width: 44,
-                        height: 44,
+                        width: isActive ? 42 : 36,
+                        height: isActive ? 42 : 36,
                         borderRadius: '50%',
                         backgroundColor: isActive ? '#FFFFFF' : theme.primary,
                         border: isActive ? `2.5px solid ${theme.accent}` : 'none',
@@ -725,7 +891,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: 21,
+                        fontSize: 19,
                         fontWeight: 800,
                         flexShrink: 0,
                         overflow: 'hidden',
@@ -752,50 +918,67 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       </div>
 
-      {/* Scene 4: Vibrant Pulsing Conversion CTA Button with Crisp White Basket Icon */}
-      {isCta && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 435,
-            left: 268,
-            right: 48,
-            zIndex: 34,
-            transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
-          }}
-        >
+      {/* Scene 4: Vibrant Pulsing Conversion CTA Button with Shimmer Sweep & Platform Safe Zone */}
+      {isCta && (() => {
+        const shimmerPos = (((frame - s3End) * 3.2) % 180) - 40;
+        return (
           <div
             style={{
-              background: theme.ctaGradient,
-              color: '#FFFFFF',
-              padding: '15px 24px',
-              borderRadius: 999,
-              fontSize: 30,
-              fontWeight: 800,
-              textAlign: 'center',
-              boxShadow: '0 14px 32px rgba(255, 61, 104, 0.38)',
-              border: '3px solid #FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 12,
+              position: 'absolute',
+              bottom: 455,
+              left: 266,
+              right: 104,
+              zIndex: 34,
+              transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
             }}
           >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 11h14l-1.5 8h-11z" fill="rgba(255,255,255,0.22)" />
-              <path d="M9 11l3-6 3 6" />
-              <line x1="10" y1="14" x2="10" y2="16" />
-              <line x1="14" y1="14" x2="14" y2="16" />
-            </svg>
-            <span>{cleanCtaText}</span>
+            <div
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                background: theme.ctaGradient,
+                color: '#FFFFFF',
+                padding: '15px 22px',
+                borderRadius: 999,
+                fontSize: 28,
+                fontWeight: 800,
+                textAlign: 'center',
+                boxShadow: '0 14px 32px rgba(255, 61, 104, 0.38)',
+                border: '3px solid #FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 10,
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: `${shimmerPos}%`,
+                  width: '32%',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.38) 50%, transparent 100%)',
+                  transform: 'skewX(-22deg)',
+                  pointerEvents: 'none',
+                }}
+              />
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 11h14l-1.5 8h-11z" fill="rgba(255,255,255,0.22)" />
+                <path d="M9 11l3-6 3 6" />
+                <line x1="10" y1="14" x2="10" y2="16" />
+                <line x1="14" y1="14" x2="14" y2="16" />
+              </svg>
+              <span>{cleanCtaText}</span>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Signature Channel Mascot Co-Host (Bottom-Left Presenter Stage) */}
       <MascotNarrator
         sceneIdx={sceneIdx}
-        sceneStartFrame={isHero ? 0 : isGrid ? s1End : isSpotlight ? s2End : s3End}
+        sceneStartFrame={sceneStartFrame}
         activePointIdx={activePointIdx}
         captions={props.captions}
         theme={theme}

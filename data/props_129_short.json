@@ -31,14 +31,42 @@
   "customAccent": null,
   "images": [
     "products/129/hero_studio.jpg",
-    "129_vis_2.jpg",
-    "129_vis_3.jpg",
-    "129_vis_4.jpg",
+    "129_vis_6.jpg",
+    "products/129/swatches_clean.jpg",
+    "products/129/grid_clean.jpg",
     "products/129/lifestyle_vanity.jpg",
     "129_vis_6.jpg",
-    "129_vis_7.jpg"
+    "products/129/sponge_clean.jpg"
   ],
   "heroFullBleedImage": "products/129/hero_fullbleed.jpg",
+  "heroCalloutImage": "products/129/sponge_clean.jpg",
+  "heroCalloutLabel": "หัวฟองน้ำแตะ 3 วิ ✨",
+  "swatchHighlights": [
+    {
+      "label": "#02 ส้มพีช",
+      "hex": "#E98A68",
+      "xPct": 86.5,
+      "yPct": 46.5,
+      "startSec": 13.8,
+      "endSec": 16.0
+    },
+    {
+      "label": "#04 ชมพูตุ่น",
+      "hex": "#D67486",
+      "xPct": 65.5,
+      "yPct": 46.5,
+      "startSec": 16.0,
+      "endSec": 17.2
+    },
+    {
+      "label": "#09 ชิมเมอร์",
+      "hex": "#D47B9A",
+      "xPct": 16.5,
+      "yPct": 46.5,
+      "startSec": 17.2,
+      "endSec": 21.2
+    }
+  ],
   "heroBadges": [
     "💧 ฟองน้ำนุ่มฉ่ำ",
     "✨ ครบ 10 เฉดสี",
