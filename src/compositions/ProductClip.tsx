@@ -468,11 +468,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: isHero ? 'flex-end' : 'center',
+            justifyContent: isHero ? 'flex-start' : 'center',
             gap: 14,
           }}
         >
-          {/* Scene 1 Full-Bleed Mode: 1 Unified Balanced Feature Strip */}
+          {/* Scene 1 Full-Bleed Mode: 1 Unified Balanced Feature Strip tucked neatly under Hook */}
           {isHero && props.heroFullBleedImage ? (
             <div
               style={{
@@ -487,7 +487,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 fontSize: 25,
                 fontWeight: 700,
                 boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
-                marginBottom: 14,
+                marginTop: 4,
                 transform: `scale(${interpolate(sideCardSpring, [0, 1], [0.85, 1])})`,
               }}
             >
@@ -542,7 +542,8 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               <div
                 style={{
                   position: 'relative',
-                  width: isHero && images.length > 1 ? '76%' : '100%',
+                  width: isHero && images.length > 1 ? '76%' : isCta ? 860 : '100%',
+                  maxWidth: '100%',
                   flex: isGrid ? 1 : undefined,
                   minHeight: isGrid ? 0 : undefined,
                   height: isGrid
@@ -550,7 +551,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                     : isSpotlight && props.decisionHelper
                     ? '87%'
                     : isCta && props.howToSteps?.length
-                    ? '87%'
+                    ? 860
                     : '100%',
                   borderRadius: 32,
                   overflow: 'hidden',
@@ -622,7 +623,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
-                gap: 10,
+                gap: 12,
                 zIndex: 12,
                 flexShrink: 0,
               }}
@@ -632,32 +633,32 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                   key={`step-${sIdx}`}
                   style={{
                     flex: 1,
-                    backgroundColor: theme.surface,
-                    backdropFilter: 'blur(10px)',
+                    backgroundColor: theme.captionBg,
+                    backdropFilter: 'blur(12px)',
                     border: `1.5px solid ${theme.surfaceBorder}`,
-                    borderRadius: 20,
-                    padding: '10px 8px',
+                    borderRadius: 22,
+                    padding: '12px 10px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 8,
-                    fontSize: 22,
+                    gap: 10,
+                    fontSize: 25,
                     fontWeight: 700,
                     color: theme.text,
-                    boxShadow: '0 8px 20px rgba(0,0,0,0.07)',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.08)',
                   }}
                 >
                   <span
                     style={{
-                      width: 28,
-                      height: 28,
+                      width: 32,
+                      height: 32,
                       borderRadius: '50%',
                       background: theme.ctaGradient,
                       color: '#FFFFFF',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: 17,
+                      fontSize: 19,
                       fontWeight: 800,
                       flexShrink: 0,
                     }}

@@ -83,13 +83,11 @@ export const KaraokeCaptions: React.FC<Props> = ({
         <span>{headerLabel}</span>
       </div>
 
-      {/* Soft Pastel Glass Speech Bubble (Balanced Fit-Content with MinWidth) */}
+      {/* Soft Pastel Glass Speech Bubble (Full-Column Balanced Width) */}
       <div
         style={{
           position: 'relative',
-          width: 'fit-content',
-          minWidth: 540,
-          maxWidth: '100%',
+          width: '100%',
           backgroundColor: theme.captionBg,
           backdropFilter: 'blur(16px)',
           borderRadius: 28,
