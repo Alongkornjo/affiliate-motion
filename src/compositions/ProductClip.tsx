@@ -377,41 +377,11 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         }}
       />
 
-      {/* Category Pill inside Top Safe Zone (Balanced & Readable) */}
+      {/* Main Content Container (Zero-Clutter Framing above Presenter Stage) */}
       <div
         style={{
           position: 'absolute',
-          top: 86,
-          left: 48,
-          right: 48,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 20,
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: theme.captionBg,
-            backdropFilter: 'blur(12px)',
-            border: `1.5px solid ${theme.surfaceBorder}`,
-            color: theme.text,
-            padding: '10px 26px',
-            borderRadius: 999,
-            fontSize: 28,
-            fontWeight: 700,
-            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.08)',
-          }}
-        >
-          ✨ ของแท้ · {props.category.includes('/') ? props.category.split('/').pop()?.trim() : props.category}
-        </div>
-      </div>
-
-      {/* Main Content Container (Balanced Full-Width Framing above Presenter Stage) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: SAFE_ZONES.top + 12,
+          top: 148,
           bottom: isCta ? 545 : 495,
           left: 48,
           right: 48,
@@ -423,42 +393,67 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           zIndex: 10,
         }}
       >
-        {/* Top Dynamic Headline Pill (2-line Hero Display in Scene 1, Clean Glass in Scenes 2-4) */}
-        <div
-          style={{
-            transform: `scale(${interpolate(hookSpring, [0, 1], [0.88, 1])})`,
-            background: isHero ? theme.ctaGradient : theme.surface,
-            backdropFilter: 'blur(14px)',
-            border: isHero ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
-            color: isHero ? theme.badgeText : theme.text,
-            padding: isHero ? '18px 28px' : '15px 26px',
-            borderRadius: 28,
-            textAlign: 'center',
-            boxShadow: isHero
-              ? '0 14px 32px rgba(255, 61, 104, 0.24)'
-              : '0 10px 28px rgba(0, 0, 0, 0.08)',
-            width: '100%',
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: headlineFont,
-              fontSize: isHero ? 44 : 38,
-              fontWeight: 700,
-              lineHeight: 1.28,
-              whiteSpace: 'pre-line',
-            }}
-          >
-            {isHero
-              ? props.hookText
-              : isGrid
-              ? 'ทำไมตัวนี้ถึงขายดี?'
-              : isSpotlight
-              ? props.spotlightTitle || props.productName
-              : props.ctaHeadline || 'เล็งสีที่ชอบไว้แล้วใช่ไหม? จิ้มดูในตะกร้าเลย!'}
-          </div>
-        </div>
+        {/* Top Dynamic Headline Pill with Unboxed Brand Eyebrow */}
+        {(() => {
+          const asciiMatch = (props.productName || '').match(/^[A-Za-z0-9\s\-&.'+]+/);
+          const fallbackBrand =
+            asciiMatch && asciiMatch[0].trim().length >= 3
+              ? asciiMatch[0].trim().toUpperCase()
+              : (props.productName || '').split(/\s+/).slice(0, 3).join(' ');
+          const displayBrand = (props.brandLabel || fallbackBrand || '').trim();
+          return (
+            <div
+              style={{
+                transform: `scale(${interpolate(hookSpring, [0, 1], [0.88, 1])})`,
+                background: isHero ? theme.ctaGradient : theme.surface,
+                backdropFilter: 'blur(14px)',
+                border: isHero ? 'none' : `1.5px solid ${theme.surfaceBorder}`,
+                color: isHero ? theme.badgeText : theme.text,
+                padding: isHero ? '16px 28px 20px' : '14px 26px 18px',
+                borderRadius: 28,
+                textAlign: 'center',
+                boxShadow: isHero
+                  ? '0 14px 32px rgba(255, 61, 104, 0.24)'
+                  : '0 10px 28px rgba(0, 0, 0, 0.08)',
+                width: '100%',
+                flexShrink: 0,
+              }}
+            >
+              {displayBrand && (
+                <div
+                  style={{
+                    fontFamily: bodyFont,
+                    fontSize: 22,
+                    fontWeight: 700,
+                    letterSpacing: 2.2,
+                    color: isHero ? 'rgba(255, 255, 255, 0.94)' : theme.primary,
+                    marginBottom: 24,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {displayBrand}
+                </div>
+              )}
+              <div
+                style={{
+                  fontFamily: headlineFont,
+                  fontSize: isHero ? 44 : 38,
+                  fontWeight: 700,
+                  lineHeight: 1.38,
+                  whiteSpace: 'pre-line',
+                }}
+              >
+                {isHero
+                  ? props.hookText
+                  : isGrid
+                  ? props.gridHeadline || 'ตัวเดียวจบ! ใช้ง่ายปังเกินต้าน ✨'
+                  : isSpotlight
+                  ? props.spotlightTitle || props.productName
+                  : props.ctaHeadline || 'ได้สีที่ใช่แล้ว กดตะกร้าเลย! 🛒'}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Center Visual Stage: Full-Bleed Hero Strip vs Feature Grid vs Spotlight */}
         <div

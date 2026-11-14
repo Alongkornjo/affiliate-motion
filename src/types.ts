@@ -31,6 +31,8 @@ export type ProductClipProps = {
   originalPrice?: number;
   discountPercent?: number;
   hookText: string;
+  brandLabel?: string;
+  gridHeadline?: string;
   problemText?: string;
   keyPoints: string[];
   spotlightTitle?: string;

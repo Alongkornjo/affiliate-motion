@@ -100,6 +100,8 @@ def process_product(product_path: Path, idx: int, tier: str, bundle_dir: Path, c
         "price": product["price"],
         "originalPrice": product.get("original_price"),
         "hookText": product.get("hook_text", product["product_name"]),
+        "brandLabel": product.get("brand_label"),
+        "gridHeadline": product.get("grid_headline"),
         "problemText": product.get("target_pain", ""),
         "keyPoints": product.get("key_points", []),
         "spotlightTitle": product.get("spotlight_title"),

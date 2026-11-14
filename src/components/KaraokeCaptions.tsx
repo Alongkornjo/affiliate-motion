@@ -41,10 +41,10 @@ export const KaraokeCaptions: React.FC<Props> = ({
     sceneIdx === 0
       ? `✨ ${mascotName} ป้ายยาของเด็ด`
       : sceneIdx === 1
-      ? `💡 ${mascotName} สรุปจุดเด่น (${Math.min(activePointIdx + 1, totalPoints)}/${totalPoints})`
+      ? `💡 ${mascotName} ชี้จุดปัง (${Math.min(activePointIdx + 1, totalPoints)}/${totalPoints})`
       : sceneIdx === 2
       ? `💕 ${mascotName} คอนเฟิร์มความปัง`
-      : `🛒 ${mascotName} ชี้เป้าพิกัดในตะกร้า`;
+      : `🛒 ${mascotName} แปะพิกัดตะกร้าแล้ว`;
 
   if (!activeLine) return null;
 
