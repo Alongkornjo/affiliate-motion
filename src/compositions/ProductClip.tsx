@@ -220,7 +220,87 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </>
       )}
 
-      {/* Ambient Animated Glow Orbs */}
+      {/* Dynamic Ambient Backdrop (Blurred Product Scene + Soft Pastel Wash) */}
+      {(currentImg || props.heroFullBleedImage) && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: -40,
+            zIndex: 0,
+            pointerEvents: 'none',
+            transform: `scale(${1.06 + Math.sin(frame / 45) * 0.02})`,
+          }}
+        >
+          <Img
+            src={staticFile(isHero && props.heroFullBleedImage ? props.heroFullBleedImage : currentImg)}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              filter: 'blur(44px) saturate(1.18)',
+              opacity: theme.isDark ? 0.28 : 0.34,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: theme.bgGradient,
+              opacity: theme.isDark ? 0.72 : 0.62,
+            }}
+          />
+        </div>
+      )}
+
+      {/* Scene 1 Full-Bleed 9:16 Commercial Hero Layer */}
+      {isHero && props.heroFullBleedImage && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 2,
+            pointerEvents: 'none',
+            overflow: 'hidden',
+          }}
+        >
+          <Img
+            src={staticFile(props.heroFullBleedImage)}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: `scale(${kenBurnsScale})`,
+            }}
+          />
+          {/* Soft Top & Bottom Vignettes so Headline and Mascot/Captions pop cleanly */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '28%',
+              background: theme.isDark
+                ? 'linear-gradient(180deg, rgba(11,17,32,0.75) 0%, transparent 100%)'
+                : 'linear-gradient(180deg, rgba(255,244,247,0.78) 0%, rgba(255,244,247,0.3) 65%, transparent 100%)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '38%',
+              background: theme.isDark
+                ? 'linear-gradient(0deg, rgba(11,17,32,0.82) 0%, transparent 100%)'
+                : 'linear-gradient(0deg, rgba(255,244,247,0.88) 0%, rgba(255,244,247,0.45) 55%, transparent 100%)',
+            }}
+          />
+        </div>
+      )}
+
+      {/* Ambient Animated Glow Orbs + Floating Bokeh Sparkles */}
       <div
         style={{
           position: 'absolute',
@@ -230,23 +310,52 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           height: 500,
           borderRadius: '50%',
           background: theme.primary,
-          opacity: theme.isDark ? 0.16 : 0.13,
+          opacity: theme.isDark ? 0.16 : 0.14,
           filter: 'blur(95px)',
+          zIndex: 3,
+          pointerEvents: 'none',
         }}
       />
       <div
         style={{
           position: 'absolute',
-          bottom: 240 + Math.cos(frame / 22) * 28,
+          bottom: 180 + Math.cos(frame / 22) * 28,
           right: -110,
-          width: 440,
-          height: 440,
+          width: 460,
+          height: 460,
           borderRadius: '50%',
           background: theme.accent,
-          opacity: theme.isDark ? 0.14 : 0.11,
+          opacity: theme.isDark ? 0.14 : 0.12,
           filter: 'blur(95px)',
+          zIndex: 3,
+          pointerEvents: 'none',
         }}
       />
+      {[
+        { x: 90, y: 260, size: 18, speed: 24, delay: 0 },
+        { x: 960, y: 340, size: 22, speed: 30, delay: 14 },
+        { x: 140, y: 1280, size: 16, speed: 28, delay: 8 },
+        { x: 920, y: 1380, size: 24, speed: 22, delay: 20 },
+        { x: 540, y: 1680, size: 20, speed: 26, delay: 11 },
+        { x: 840, y: 1600, size: 14, speed: 32, delay: 5 },
+      ].map((b, idx) => (
+        <div
+          key={`bokeh-${idx}`}
+          style={{
+            position: 'absolute',
+            left: b.x + Math.sin((frame + b.delay * 10) / b.speed) * 18,
+            top: b.y + Math.cos((frame + b.delay * 10) / b.speed) * 22,
+            width: b.size,
+            height: b.size,
+            borderRadius: '50%',
+            background: idx % 2 === 0 ? '#FFFFFF' : theme.primary,
+            opacity: 0.28 + Math.sin((frame + b.delay * 8) / 18) * 0.14,
+            filter: 'blur(2px)',
+            zIndex: 4,
+            pointerEvents: 'none',
+          }}
+        />
+      ))}
 
       {/* Top Progress Bar */}
       <div
@@ -289,19 +398,20 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       </div>
 
-      {/* Main Content Container (Strictly within Safe Zones, above Presenter Stage) */}
+      {/* Main Content Container (Balanced Full-Width Framing above Presenter Stage) */}
       <div
         style={{
           position: 'absolute',
-          top: SAFE_ZONES.top + 12,
-          bottom: isCta ? 595 : 580,
-          left: SAFE_ZONES.left,
-          right: SAFE_ZONES.right,
+          top: SAFE_ZONES.top + 8,
+          bottom: isCta ? 545 : 495,
+          left: 48,
+          right: 48,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: 16,
+          gap: 14,
+          zIndex: 10,
         }}
       >
         {/* Top Dynamic Headline Pill (Soft Rounded Glass) */}
@@ -332,7 +442,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           </div>
         </div>
 
-        {/* Center Visual Stage: Hero Collage vs Feature Grid vs Spotlight */}
+        {/* Center Visual Stage: Full-Bleed Hero Chips vs Feature Grid vs Spotlight */}
         <div
           style={{
             position: 'relative',
@@ -345,86 +455,134 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             gap: 12,
           }}
         >
-          {/* Scene 1: Tilted Side Collage Cards behind Main Card */}
-          {isHero && images.length > 1 && (
+          {/* Scene 1 Full-Bleed Mode: Floating Feature Chips around the Hero Bottle */}
+          {isHero && props.heroFullBleedImage ? (
+            <div style={{ position: 'relative', width: '100%', height: '100%', pointerEvents: 'none' }}>
+              {(props.heroBadges && props.heroBadges.length > 0
+                ? props.heroBadges
+                : ['💧 หัวฟองน้ำนุ่มฉ่ำ', '✨ 10 เฉดสีละมุน', '🌸 ไม่เป็นคราบ']
+              )
+                .slice(0, 3)
+                .map((badge, bIdx) => {
+                  const positions = [
+                    { top: 44, left: 10 },
+                    { top: 150, right: 8 },
+                    { bottom: 80, right: 16 },
+                  ];
+                  const pos = positions[bIdx] || positions[0];
+                  const chipSpring = spring({
+                    frame: Math.max(frame - 10 - bIdx * 6, 0),
+                    fps,
+                    config: { damping: 14, stiffness: 135 },
+                  });
+                  return (
+                    <div
+                      key={`hbadge-${bIdx}`}
+                      style={{
+                        position: 'absolute',
+                        ...pos,
+                        backgroundColor: theme.captionBg,
+                        backdropFilter: 'blur(14px)',
+                        border: `1.5px solid ${theme.surfaceBorder}`,
+                        color: theme.text,
+                        padding: '10px 20px',
+                        borderRadius: 999,
+                        fontSize: 23,
+                        fontWeight: 700,
+                        boxShadow: '0 10px 24px rgba(0, 0, 0, 0.10)',
+                        transform: `translateY(${Math.sin((frame + bIdx * 18) / 14) * 5}px) scale(${chipSpring})`,
+                        opacity: chipSpring,
+                      }}
+                    >
+                      {badge}
+                    </div>
+                  );
+                })}
+            </div>
+          ) : (
             <>
+              {/* Scene 1 (Fallback Boxed Mode): Tilted Side Collage Cards behind Main Card */}
+              {isHero && images.length > 1 && (
+                <>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: -8,
+                      width: 240,
+                      height: 300,
+                      borderRadius: 26,
+                      overflow: 'hidden',
+                      border: `2px solid ${theme.surfaceBorder}`,
+                      boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
+                      transform: `rotate(-8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
+                      zIndex: 5,
+                    }}
+                  >
+                    <ProductStageImage src={sideLeftImg} zoom={1.0} />
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: -8,
+                      width: 240,
+                      height: 300,
+                      borderRadius: 26,
+                      overflow: 'hidden',
+                      border: `2px solid ${theme.surfaceBorder}`,
+                      boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
+                      transform: `rotate(8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
+                      zIndex: 5,
+                    }}
+                  >
+                    <ProductStageImage src={sideRightImg} zoom={1.0} />
+                  </div>
+                </>
+              )}
+
+              {/* Main Center Product Frame (Full-frame contain + blurred glass backdrop) */}
               <div
                 style={{
-                  position: 'absolute',
-                  left: -8,
-                  width: 240,
-                  height: 300,
-                  borderRadius: 26,
+                  position: 'relative',
+                  width: isHero && images.length > 1 ? '76%' : '100%',
+                  height: isGrid ? '58%' : isSpotlight && props.decisionHelper ? '90%' : isCta && props.howToSteps?.length ? '88%' : '100%',
+                  alignSelf: isGrid ? 'flex-start' : 'center',
+                  borderRadius: 32,
                   overflow: 'hidden',
+                  backgroundColor: theme.surface,
                   border: `2px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
-                  transform: `rotate(-8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
-                  zIndex: 5,
+                  boxShadow: '0 22px 48px rgba(0, 0, 0, 0.20)',
+                  transform: `translateY(${floatY}px)`,
+                  zIndex: 10,
                 }}
               >
-                <ProductStageImage src={sideLeftImg} zoom={1.0} />
-              </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  right: -8,
-                  width: 240,
-                  height: 300,
-                  borderRadius: 26,
-                  overflow: 'hidden',
-                  border: `2px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
-                  transform: `rotate(8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
-                  zIndex: 5,
-                }}
-              >
-                <ProductStageImage src={sideRightImg} zoom={1.0} />
+                {currentImg && (
+                  <ProductStageImage
+                    src={currentImg}
+                    zoom={isSpotlight ? kenBurnsScale * 1.02 : kenBurnsScale}
+                  />
+                )}
+
+                {discount > 0 && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 20,
+                      right: 20,
+                      backgroundColor: theme.accent,
+                      color: '#111827',
+                      padding: '8px 20px',
+                      borderRadius: 999,
+                      fontSize: 26,
+                      fontWeight: 800,
+                      boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    ลด {discount}%
+                  </div>
+                )}
               </div>
             </>
           )}
-
-          {/* Main Center Product Frame (Full-frame contain + blurred glass backdrop) */}
-          <div
-            style={{
-              position: 'relative',
-              width: isHero && images.length > 1 ? '76%' : '100%',
-              height: isGrid ? '56%' : isSpotlight && props.decisionHelper ? '89%' : isCta && props.howToSteps?.length ? '87%' : '100%',
-              alignSelf: isGrid ? 'flex-start' : 'center',
-              borderRadius: 32,
-              overflow: 'hidden',
-              backgroundColor: theme.surface,
-              border: `2px solid ${theme.surfaceBorder}`,
-              boxShadow: '0 22px 48px rgba(0, 0, 0, 0.20)',
-              transform: `translateY(${floatY}px)`,
-              zIndex: 10,
-            }}
-          >
-            {currentImg && (
-              <ProductStageImage
-                src={currentImg}
-                zoom={isSpotlight ? kenBurnsScale * 1.02 : kenBurnsScale}
-              />
-            )}
-
-            {discount > 0 && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 20,
-                  right: 20,
-                  backgroundColor: theme.accent,
-                  color: '#111827',
-                  padding: '8px 20px',
-                  borderRadius: 999,
-                  fontSize: 26,
-                  fontWeight: 800,
-                  boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
-                }}
-              >
-                ลด {discount}%
-              </div>
-            )}
-          </div>
 
           {/* Scene 3: Shade Decision Helper Pill (Soft Glass) */}
           {isSpotlight && props.decisionHelper && (
@@ -513,7 +671,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: '41%',
+                height: '39%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -595,9 +753,9 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         <div
           style={{
             position: 'absolute',
-            bottom: 495,
-            left: 232,
-            right: SAFE_ZONES.right - 15,
+            bottom: 435,
+            left: 268,
+            right: 48,
             zIndex: 34,
             transform: `scale(${interpolate(ctaSpring, [0, 1], [0.9, 1]) * ctaPulse})`,
           }}

@@ -52,9 +52,9 @@ export const KaraokeCaptions: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: SAFE_ZONES.bottomCaption - 14,
-        left: 234,
-        right: SAFE_ZONES.right - 15,
+        bottom: 248,
+        left: 268,
+        right: 48,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
@@ -67,13 +67,13 @@ export const KaraokeCaptions: React.FC<Props> = ({
         style={{
           background: theme.ctaGradient,
           color: '#FFFFFF',
-          padding: '5px 16px',
+          padding: '6px 18px',
           borderRadius: 999,
-          fontSize: 20,
+          fontSize: 21,
           fontWeight: 700,
           boxShadow: '0 6px 16px rgba(0, 0, 0, 0.14)',
           marginBottom: 8,
-          marginLeft: 6,
+          marginLeft: 8,
           zIndex: 32,
           display: 'inline-flex',
           alignItems: 'center',
@@ -83,23 +83,24 @@ export const KaraokeCaptions: React.FC<Props> = ({
         <span>{headerLabel}</span>
       </div>
 
-      {/* Soft Pastel Glass Speech Bubble (Fit-Content, No Harsh Border) */}
+      {/* Soft Pastel Glass Speech Bubble (Balanced Fit-Content with MinWidth) */}
       <div
         style={{
           position: 'relative',
           width: 'fit-content',
+          minWidth: 460,
           maxWidth: '100%',
           backgroundColor: theme.captionBg,
           backdropFilter: 'blur(16px)',
           borderRadius: 28,
-          padding: '15px 24px',
+          padding: '16px 26px',
           boxShadow: theme.isDark
             ? '0 14px 36px rgba(0, 0, 0, 0.38)'
             : '0 14px 34px rgba(255, 77, 109, 0.14), 0 4px 14px rgba(0, 0, 0, 0.06)',
           border: theme.isDark
             ? '1.5px solid rgba(255, 255, 255, 0.16)'
-            : '1.5px solid rgba(255, 255, 255, 0.85)',
-          textAlign: 'left',
+            : '1.5px solid rgba(255, 255, 255, 0.88)',
+          textAlign: 'center',
           lineHeight: 1.42,
         }}
       >

@@ -46,6 +46,8 @@ export type ProductClipProps = {
   mascotId?: MascotId;
   customAccent?: string;
   images: string[];
+  heroFullBleedImage?: string;
+  heroBadges?: string[];
   voiceoverFile: string;
   captions: CaptionLine[];
   durationInSec: number;

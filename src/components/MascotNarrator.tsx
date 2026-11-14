@@ -86,10 +86,10 @@ export const MascotNarrator: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: 312,
-        left: 14,
-        width: 228,
-        height: 305,
+        bottom: 235,
+        left: 20,
+        width: 245,
+        height: 325,
         zIndex: 35,
         pointerEvents: 'none',
         display: 'flex',
@@ -103,8 +103,8 @@ export const MascotNarrator: React.FC<Props> = ({
         style={{
           position: 'absolute',
           bottom: 12,
-          width: 165,
-          height: 38,
+          width: 185,
+          height: 42,
           borderRadius: '50%',
           background: `radial-gradient(circle, ${theme.primary}66 0%, transparent 72%)`,
           filter: 'blur(6px)',
@@ -114,18 +114,18 @@ export const MascotNarrator: React.FC<Props> = ({
       {/* Gentle Floating Emotion Particles above Mascot */}
       {particles.map((emoji, idx) => {
         const cycle = (frame + idx * 22) % 60;
-        const pY = interpolate(cycle, [0, 60], [0, -68]);
+        const pY = interpolate(cycle, [0, 60], [0, -72]);
         const pOpacity = interpolate(cycle, [0, 12, 48, 60], [0, 0.92, 0.92, 0]);
-        const pX = idx === 0 ? -62 : idx === 1 ? 62 : -15;
+        const pX = idx === 0 ? -68 : idx === 1 ? 68 : -16;
         return (
           <div
             key={`pt-${idx}`}
             style={{
               position: 'absolute',
-              top: isHeadMode ? 48 : 14,
+              top: isHeadMode ? 48 : 10,
               left: '50%',
               marginLeft: pX,
-              fontSize: 28,
+              fontSize: 30,
               opacity: pOpacity,
               transform: `translateY(${pY}px)`,
               filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
@@ -140,8 +140,8 @@ export const MascotNarrator: React.FC<Props> = ({
         /* Scene 2 & 3: Expressive Wobble Head Badge (หัวมาสคอตดุ๊กดิ๊กเห็นสีหน้าชัด 2.5x) */
         <div
           style={{
-            width: 204,
-            height: 204,
+            width: 216,
+            height: 216,
             marginBottom: 14,
             borderRadius: '50%',
             background: `linear-gradient(145deg, #FFFFFF 0%, ${theme.surface} 100%)`,
@@ -170,8 +170,8 @@ export const MascotNarrator: React.FC<Props> = ({
         /* Scene 1 & 4: Full-Body Mascot (Walk-in Wave & Orange Basket CTA) */
         <div
           style={{
-            width: 220,
-            height: 296,
+            width: 240,
+            height: 318,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

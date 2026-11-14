@@ -36,6 +36,12 @@
     "129_vis_6.jpg",
     "129_vis_7.jpg"
   ],
+  "heroFullBleedImage": "products/129/hero_fullbleed.jpg",
+  "heroBadges": [
+    "💧 หัวฟองน้ำนุ่มฉ่ำ",
+    "✨ 10 เฉดสีละมุน",
+    "🌸 เกลี่ยง่ายไม่เป็นคราบ"
+  ],
   "voiceoverFile": "vo_129_short.mp3",
   "captions": [
     {
