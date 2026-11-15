@@ -1,0 +1,64 @@
+{
+  "no": "131_howto",
+  "product_name": "วิธีใช้ Mango 2 IN 1 เก้าอี้ลับเล็บแมว (สาธิต 3 ขั้นตอน)",
+  "category": "สัตว์เลี้ยง / ของใช้แมว",
+  "price": 0,
+  "affiliate_link": "https://s.shopee.co.th/6AmbxHLIQn",
+  "hook_text": "วิธีใช้เก้าอี้ลับเล็บแมว\nง่ายๆ แค่ 3 ขั้นตอน!",
+  "brand_label": "MANGO  ·  HOW-TO 3 ขั้นตอน",
+  "grid_headline": "3 ขั้นตอนใช้จริง! โซฟาไม่พัง ✨",
+  "target_pain": "ติดตั้งง่าย ใช้งานได้ทันที น้องแมวชอบตั้งแต่ครั้งแรก",
+  "key_points": [
+    "ขั้นที่ 1: วางเสื่อป่านลงบนโครงไม้ แน่นไม่หลุดง่าย",
+    "ขั้นที่ 2: วางมุมโปรดให้น้องแมวมาลับเล็บแทนโซฟา",
+    "ขั้นที่ 3: นอนกลิ้งสบาย มีขอบพิงกันตก รับได้ 50 กก."
+  ],
+  "spotlight_title": "เช็กจุดสำคัญก่อนใช้งานจริง! 🐾",
+  "decision_helper": "✨ เสื่อป่านไม่เป็นขุย · ขนาด 62×32×32 ซม. รับ 50 กก.",
+  "how_to_steps": [
+    "วางเสื่อบนโครง",
+    "วางมุมโปรด",
+    "หลับสบาย!"
+  ],
+  "cta_headline": "โซฟาปลอดภัย น้องแมวแฮปปี้! 🐾",
+  "cta_text": "จิ้มตะกร้าด้านล่าง · ลองเลยวันนี้!",
+  "themeId": "warm_home",
+  "layoutVariant": "feature_carousel",
+  "mascotId": "sky_cat",
+  "staged_images": [
+    "products/131/hero_studio.jpg",
+    "products/131/kitten_clean.jpg",
+    "products/131/removable_mat.jpg",
+    "products/131/grid_clean.jpg",
+    "products/131/cat_ergonomic.jpg",
+    "products/131/weave_clean.jpg",
+    "products/131/structure_clean.jpg"
+  ],
+  "hero_fullbleed_image": "products/131/hero_fullbleed.jpg",
+  "hero_callout_image": "products/131/hero_callout.jpg",
+  "hero_callout_label": "เสื่อป่านวางง่าย ไม่เป็นขุย ✨",
+  "hero_badges": [
+    "1️⃣ วางเสื่อป่าน",
+    "2️⃣ วางมุมโปรด",
+    "3️⃣ นอนสบาย 50 กก."
+  ],
+  "swatch_highlights": [
+    {
+      "label": "เสื่อป่านทอแน่น ไม่หลุดง่าย",
+      "hex": "#D97706",
+      "xPct": 45.0,
+      "yPct": 34.0,
+      "startSec": 14.0,
+      "endSec": 16.5
+    },
+    {
+      "label": "โครงไม้แท้ รับ 50 กก.",
+      "hex": "#EE4D2D",
+      "xPct": 62.0,
+      "yPct": 76.0,
+      "startSec": 16.5,
+      "endSec": 19.0
+    }
+  ],
+  "narration_short": "วิธีใช้เก้าอี้ลับเล็บแมว Mango สองอินวัน ง่ายๆ แค่สามขั้นตอน ขั้นที่หนึ่ง วางเสื่อลับเล็บลงบนโครงไม้ เสื่อป่านทอแน่นไม่เป็นขุย ยึดแน่นไม่หลุดง่าย ขั้นที่สอง นำไปวางมุมโปรดในบ้าน ให้น้องแมวมาลับเล็บ ลดปัญหาข่วนโซฟาและผ้าม่าน ขั้นที่สาม น้องแมวนอนกลิ้งได้สบาย มีขอบพิงกันตก รับน้ำหนักได้ถึงห้าสิบกิโลกรัม โซฟาปลอดภัย น้องแมวแฮปปี้ กดดูสินค้าจากตะกร้าได้เลย"
+}
