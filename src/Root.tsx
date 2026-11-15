@@ -1,5 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
+import { HowToClip, HowToClipProps } from './compositions/HowToClip';
 import { ProductClip } from './compositions/ProductClip';
 import { ProductClipProps } from './types';
 
@@ -30,25 +31,47 @@ const defaultProps: ProductClipProps = {
 
 export const RemotionRoot: React.FC = () => {
   return (
-    <Composition
-      id="ProductClip"
-      component={ProductClip}
-      durationInFrames={600}
-      fps={30}
-      width={1080}
-      height={1920}
-      defaultProps={defaultProps}
-      calculateMetadata={({ props }) => {
-        const fps = 30;
-        const p = props as ProductClipProps;
-        const sec = Math.max(p.durationInSec || 20, 5);
-        return {
-          durationInFrames: Math.ceil(sec * fps),
-          fps,
-          width: 1080,
-          height: 1920,
-        };
-      }}
-    />
+    <>
+      <Composition
+        id="ProductClip"
+        component={ProductClip}
+        durationInFrames={600}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultProps}
+        calculateMetadata={({ props }) => {
+          const fps = 30;
+          const p = props as ProductClipProps;
+          const sec = Math.max(p.durationInSec || 20, 5);
+          return {
+            durationInFrames: Math.ceil(sec * fps),
+            fps,
+            width: 1080,
+            height: 1920,
+          };
+        }}
+      />
+      <Composition
+        id="HowToClip"
+        component={HowToClip}
+        durationInFrames={600}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultProps as HowToClipProps}
+        calculateMetadata={({ props }) => {
+          const fps = 30;
+          const p = props as HowToClipProps;
+          const sec = Math.max(p.durationInSec || 20, 5);
+          return {
+            durationInFrames: Math.ceil(sec * fps),
+            fps,
+            width: 1080,
+            height: 1920,
+          };
+        }}
+      />
+    </>
   );
 };
