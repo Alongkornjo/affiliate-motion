@@ -10,6 +10,8 @@ interface Props {
   activePointIdx?: number;
   totalPoints?: number;
   mascotId?: MascotId;
+  fullWidth?: boolean;
+  hideMascotTag?: boolean;
 }
 
 const MASCOT_NAMES: Record<MascotId, string> = {
@@ -26,6 +28,8 @@ export const KaraokeCaptions: React.FC<Props> = ({
   activePointIdx = 0,
   totalPoints = 3,
   mascotId = 'mini',
+  fullWidth = false,
+  hideMascotTag = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -52,36 +56,38 @@ export const KaraokeCaptions: React.FC<Props> = ({
     <div
       style={{
         position: 'absolute',
-        bottom: 268,
-        left: 266,
+        bottom: fullWidth ? 240 : 268,
+        left: fullWidth ? 56 : 266,
         right: 104,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start',
+        alignItems: fullWidth ? 'center' : 'flex-start',
         pointerEvents: 'none',
         zIndex: 30,
       }}
     >
       {/* Soft Floating Presenter Tag Pill */}
-      <div
-        style={{
-          background: theme.ctaGradient,
-          color: '#FFFFFF',
-          padding: '7px 20px',
-          borderRadius: 999,
-          fontSize: 24,
-          fontWeight: 700,
-          boxShadow: '0 6px 16px rgba(0, 0, 0, 0.14)',
-          marginBottom: 8,
-          marginLeft: 8,
-          zIndex: 32,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-        }}
-      >
-        <span>{headerLabel}</span>
-      </div>
+      {!hideMascotTag && (
+        <div
+          style={{
+            background: theme.ctaGradient,
+            color: '#FFFFFF',
+            padding: '7px 20px',
+            borderRadius: 999,
+            fontSize: 24,
+            fontWeight: 700,
+            boxShadow: '0 6px 16px rgba(0, 0, 0, 0.14)',
+            marginBottom: 8,
+            marginLeft: 8,
+            zIndex: 32,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <span>{headerLabel}</span>
+        </div>
+      )}
 
       {/* Soft Pastel Glass Speech Bubble (Full-Column Balanced Width) */}
       <div

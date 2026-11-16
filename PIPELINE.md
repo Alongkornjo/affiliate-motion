@@ -1,10 +1,10 @@
-# Affiliate Motion — Standard Clip Format & Production Pipeline (v15)
+# Affiliate Motion — Standard Clip Format & Production Pipeline (v16)
 
 เอกสารมาตรฐานล่าสุดสำหรับการผลิตคลิป Shopee Affiliate แนวตั้ง `9:16` (`1080×1920`, `30fps`) เพื่อใช้ซ้ำกับสินค้าทุกชิ้น
 
 > **กฎบังคับ (Mandatory 2-Clip Standard):** สินค้า 1 ชิ้น **ต้องผลิตคู่กัน 2 คลิปเสมอ** ก่อนส่งงาน:
-> 1. **`#<NO>_short.mp4`** — คลิปสั้นขายจุดเด่น (`ProductClip`, 15–28 วินาที)
-> 2. **`#<NO>_howto.mp4`** — คลิป How-To แก้ปัญหา (`HowToClip`, 20–30 วินาที) โดย **ต้องสร้างภาพ AI 9:16 ใหม่ทั้งหมด** ห้ามนำภาพเดิมที่อัปโหลดมาใช้ซ้ำตรงๆ
+> 1. **`#<NO>_short.mp4`** — คลิปสั้นขายจุดเด่น (`ProductClip`, 15–28 วินาที, **มีมาสคอต**)
+> 2. **`#<NO>_howto.mp4`** — คลิป How-To แก้ปัญหา (`StoryHowToClip`, **ไม่จำกัดเวลา**, **ไม่มีมาสคอต**) แบบ Full-Bleed เต็มจอสมจริง **สร้างภาพ AI ใหม่ทั้งหมด 10–20 ช็อต**
 
 ---
 
@@ -21,43 +21,46 @@
 
 ---
 
-## 2. รูปแบบคลิปที่ 2: How-To แก้ปัญหา (`HowToClip` — Problem → Solve → Result → CTA)
+## 2. รูปแบบคลิปที่ 2: How-To สมจริงเต็มจอ (`StoryHowToClip` — Problem → Solve → How-To → Before/After → CTA)
 
-**กฎเหล็กสำหรับคลิป How-To:**
-- **สร้างภาพใหม่ทั้งหมด 100% (`public/products/<NO>_howto/`):** ห้ามนำภาพเดิมที่ผู้ใช้อัปโหลดหรือภาพจากโฟลเดอร์ Short (`public/products/<NO>/`) มาใส่ตรงๆ — ต้องใช้ `generate_image` (`9:16`) เจนฉากใหม่ทั้งหมด โดยส่งภาพสินค้าจริงเป็น Reference เพื่อให้สินค้าหน้าตาตรงรุ่นเท่านั้น
-- **โครงเรื่องต้องเป็นการแก้ปัญหา (Problem-Solving):**
-  1. **Intro / Problem (`0% – ~20%`):** โชว์ปัญหาที่เกิดขึ้นจริงก่อนใช้สินค้า (เช่น มุมห้องโล่ง/ดูจืด, กิ่งไม้แบนฟีบ, ตั้งไม่มั่นคง)
-  2. **Step 1 (`~20% – ~42%`):** วิธีแก้ขั้นที่ 1 (เช่น ประกอบฐาน/แกนให้มั่นคง)
-  3. **Step 2 (`~42% – ~65%`):** วิธีแก้ขั้นที่ 2 (เช่น คลี่กิ่งทีละชั้นให้ฟูแน่น)
-  4. **Step 3 / Result (`~65% – ~84%`):** วิธีแก้ขั้นที่ 3 & ผลลัพธ์หลังแก้ปัญหาเสร็จ (มุมห้องสวยอบอุ่น)
-  5. **CTA (`~84% – 100%`):** ปิดการขาย *"กดดูสินค้าจากตะกร้าได้เลย!"*
+**กฎเหล็กสำหรับคลิป How-To (`StoryHowToClip`):**
+- **Full-Bleed 100% ไม่มีกรอบการ์ด & ไม่มีมาสคอต:** ภาพทุกช็อตเต็มขอบ `1080×1920` เหมือนคนถ่ายจริงลง TikTok/Reels ไม่มีกรอบขาว/พื้นหลังเทมเพลต ไม่มีตัวการ์ตูนมาสคอต และไม่มีป้าย `"น้อง... ป้ายยาของเด็ด"` (ใช้ซับคาราโอเกะเต็มความกว้างแบบสะอาด)
+- **สร้างภาพ AI ใหม่ทั้งหมด 10–20 ช็อต (`public/products/<NO>_howto/`):** ห้ามนำภาพเดิมที่อัปโหลดมาใช้ซ้ำตรงๆ (ส่งภาพสินค้าจริงเป็น Reference ให้สินค้าตรงรุ่นเท่านั้น) และต้องซอยมุมกล้องหลากหลาย (มุมกว้าง, มุมมือกำลังทำ, โคลสอัพจุดสำคัญ, รีแอคชัน):
+  1. **Problem / Hook (2–3 ช็อต):** โชว์ปัญหาจริง + พาดหัวใหญ่ 3 ชั้น (`❌ ปัญหา...`)
+  2. **The Solve (1–2 ช็อต):** โคลสอัพสินค้าที่จะมาแก้ปัญหา (`✨ THE SOLVE`)
+  3. **How-To Steps (4–8 ช็อต):** สาธิตวิธีแก้ปัญหาทีละขั้น (เปลี่ยนมุมกล้องให้เห็นวิธีทำจริง)
+  4. **Before vs After (1–2 ช็อต):** แบ่งครึ่งซ้าย-ขวาเทียบคน/ห้องเดิม (`BEFORE` vs `AFTER`)
+  5. **Lineup / CTA (1–2 ช็อต):** โชว์ตัวเลือก/ขนาด + ปุ่มตะกร้า
+- **คนแสดงคนเดียวกัน 100% ทั้งคลิป:** ล็อกหน้าตา ทรงผม ชุด และฉากห้องเดียวกันทุกช็อต (รวมถึงใน Before vs After)
+- **จังหวะตัดต่อสบายตา ไม่เวียนหัว & ไม่จำกัดเวลา:** แต่ละช็อตยาวอย่างน้อย **2.5–4.5 วินาที** ซูมเข้า-ออกนุ่มๆ (`zoom_in` / `zoom_out`) ห้ามตัดเร็วแบบ 0.5–1 วินาที และไม่จำกัดความยาวคลิป (30–55 วินาทีได้ตามธรรมชาติของเรื่อง)
+- **QC ตรงไปตรงมา ขั้นต่ำ 9.8 / 10:** ต้องตรวจเฟรมจริงทุกช่วงและให้คะแนนอย่างซื่อสัตย์ หากต่ำกว่า `9.8/10` ห้ามส่งงาน ต้องแก้จนผ่านก่อน
 
 ### กฎเหล็กด้านภาพ เสียง และ Safe Zone (ใช้กับทั้ง 2 คลิป)
-- **Safe Zone 9:16:** เว้นบน `148px`, เว้นขอบขวาช่วงล่าง `104px` (กันปุ่ม TikTok/Reels/Shopee บังซับและปุ่มตะกร้า), เว้นล่าง `260px` สำหรับซับคาราโอเกะและมาสคอต
-- **Zero-Clutter (ห้ามใส่ในคลิป):** ไม่มีลายน้ำ `@AffiliateMotion`, ไม่มีรหัส `#NO`, ไม่มีป้ายหมวดหมู่แยกเหนือพาดหัว, และไม่พูด/ขึ้นคำว่า *"กดลิงก์ในไบโอ"* หรือ *"คอมเมนต์ เอา"*
-- **เสียงมาตรฐาน Broadcast:** เสียงพากย์ Gemini 2.5 Flash TTS + เพลงพื้นหลังเบา (`0.075`) + SFX (`pop`, `whoosh`, `ding`, `sparkle`) ปรับความดังด้วย `ffmpeg loudnorm` เป้าหมาย **`-14 LUFS`** (True Peak `<= -1.5 dBTP`)
+- **Safe Zone 9:16:** เว้นบน `148px`, เว้นขอบขวาช่วงล่าง `104px` (กันปุ่ม TikTok/Reels/Shopee บังซับและปุ่มตะกร้า), เว้นล่าง `260px` สำหรับซับคาราโอเกะ
+- **Zero-Clutter (ห้ามใส่ในคลิป):** ไม่มีลายน้ำ `@AffiliateMotion`, ไม่มีรหัส `#NO`, ไม่มีคำว่า *"กดลิงก์ในไบโอ"* หรือ *"คอมเมนต์ เอา"*
+- **เสียงมาตรฐาน Broadcast:** เสียงพากย์ + เพลงพื้นหลังเบา + SFX ปรับความดังด้วย `ffmpeg loudnorm` เป้าหมาย **`-14 LUFS`** (True Peak `<= -1.5 dBTP`)
 
 ---
 
 ## 3. ขั้นตอนการผลิตคลิป (จบครบทั้ง 2 คลิป)
 
 1. **โยนรูปเข้า Input (`TEMPLATE_INPUT` หรือส่งรูปในแชท)**
-   - โยนรูปสินค้า 3–10 รูปลงในโฟลเดอร์ที่ก๊อปปี้จาก `TEMPLATE_INPUT` (ตั้งชื่อ เช่น `#134_ชื่อสินค้า`) — ไฟล์ `brief.txt` ใส่เฉพาะที่มีหรือไม่ใส่เลยก็ได้
+   - โยนรูปสินค้า 3–10 รูปลงในโฟลเดอร์ (ตั้งชื่อ เช่น `#134_ชื่อสินค้า`) — ไฟล์ `brief.txt` ใส่เฉพาะที่มีหรือไม่ใส่เลยก็ได้
 2. **เตรียมภาพแยก 2 ชุด:**
    - ชุดที่ 1 (`public/products/<NO>/`) สำหรับ **Short Clip**: ครอปตัดขอบข้อความ/ลายน้ำ (`visual_prep.py`) + เจน `hero_fullbleed.jpg`
-   - ชุดที่ 2 (`public/products/<NO>_howto/`) สำหรับ **How-To Clip**: เจนภาพใหม่ `9:16` ครบทุกซีน (Problem → Step 1 → Step 2 → Step 3/Result) โดยคุมคาแรกเตอร์/ห้อง/แสงให้ต่อเนื่องกัน
+   - ชุดที่ 2 (`public/products/<NO>_howto/`) สำหรับ **How-To Clip**: เจนภาพ AI `9:16` ใหม่ทั้งหมด **10–20 ช็อต** คุมคนแสดงคนเดิมและห้องเดิมตลอดคลิป
 3. **เรนเดอร์คลิปที่ 1 (`#<NO>_short.mp4`) ด้วย `batch_run.py`**
    ```bash
    python3 scripts/batch_run.py data/product_<NO>.json --tier short --cta-mode basket
    ```
-4. **เรนเดอร์คลิปที่ 2 (`#<NO>_howto.mp4`) ด้วย `HowToClip`**
+4. **เรนเดอร์คลิปที่ 2 (`#<NO>_howto.mp4`) ด้วย `StoryHowToClip`**
    - สร้าง `vo_<NO>_howto_short.mp3` + `captions_<NO>_howto_short.json` + `props_<NO>_howto_short.json` แล้วเรนเดอร์:
    ```bash
-   npx remotion render src/index.ts HowToClip out/#<NO>_howto.mp4 --props=data/props_<NO>_howto_short.json --concurrency=100% --browser-executable=/usr/bin/chromium
+   npx remotion render src/index.ts StoryHowToClip out/#<NO>_howto.mp4 --props=data/props_<NO>_howto_short.json --concurrency=100% --browser-executable=/usr/bin/chromium
    ffmpeg -y -i out/#<NO>_howto.mp4 -c:v copy -af "loudnorm=I=-14:TP=-1.5:LRA=7" -c:a aac -b:a 192k out/#<NO>_howto.norm.mp4 && mv out/#<NO>_howto.norm.mp4 out/#<NO>_howto.mp4
-   python3 scripts/qa_check.py --video out/#<NO>_howto.mp4 --tier short --frames-dir /tmp/qa_frames_howto
+   python3 scripts/qa_check.py --video out/#<NO>_howto.mp4 --tier howto --frames-dir /tmp/qa_frames_<NO>_howto
    ```
-5. **ตรวจภาพ QA + อัปโหลดส่งงานขึ้น Google Drive**
+5. **ตรวจภาพ QA แบบตรงไปตรงมา (≥ 9.8/10) + อัปโหลดส่งงานขึ้น Google Drive**
    ```bash
    gdrive mutate upload out/#<NO>_short.mp4 --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW
    gdrive mutate upload out/#<NO>_howto.mp4 --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW

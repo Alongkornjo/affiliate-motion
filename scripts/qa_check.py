@@ -40,6 +40,8 @@ def run_qa(video_path: Path, tier: str, extract_dir: Path | None = None) -> dict
         issues.append(f"Short tier duration out of 12-32s range: {duration:.2f}s")
     elif tier == "long" and not (28.0 <= duration <= 62.0):
         issues.append(f"Long tier duration out of 28-62s range: {duration:.2f}s")
+    elif tier == "howto" and duration < 15.0:
+        issues.append(f"How-To tier duration too short (<15s): {duration:.2f}s")
 
     keyframes = []
     if extract_dir:
@@ -70,7 +72,7 @@ def run_qa(video_path: Path, tier: str, extract_dir: Path | None = None) -> dict
 def main():
     parser = argparse.ArgumentParser(description="Run automated QA check on rendered MP4")
     parser.add_argument("--video", required=True, help="Path to MP4 file")
-    parser.add_argument("--tier", choices=["short", "long"], default="short")
+    parser.add_argument("--tier", choices=["short", "long", "howto"], default="short")
     parser.add_argument("--frames-dir", default="/tmp/qa_frames", help="Directory for extracted QA keyframes")
     args = parser.parse_args()
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { HowToClip, HowToClipProps } from './compositions/HowToClip';
 import { ProductClip } from './compositions/ProductClip';
+import { StoryHowToClip, StoryHowToClipProps } from './compositions/StoryHowToClip';
 import { ProductClipProps } from './types';
 
 const defaultProps: ProductClipProps = {
@@ -64,6 +65,35 @@ export const RemotionRoot: React.FC = () => {
           const fps = 30;
           const p = props as HowToClipProps;
           const sec = Math.max(p.durationInSec || 20, 5);
+          return {
+            durationInFrames: Math.ceil(sec * fps),
+            fps,
+            width: 1080,
+            height: 1920,
+          };
+        }}
+      />
+      <Composition
+        id="StoryHowToClip"
+        component={StoryHowToClip}
+        durationInFrames={900}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          no: '134_howto',
+          productName: 'Christmas Tree',
+          themeId: 'warm_home',
+          voiceoverFile: '',
+          captions: [],
+          durationInSec: 36,
+          enableSfx: true,
+          shots: [],
+        } as StoryHowToClipProps}
+        calculateMetadata={({ props }) => {
+          const fps = 30;
+          const p = props as StoryHowToClipProps;
+          const sec = Math.max(p.durationInSec || 30, 5);
           return {
             durationInFrames: Math.ceil(sec * fps),
             fps,
