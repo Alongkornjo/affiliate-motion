@@ -60,9 +60,12 @@
    ffmpeg -y -i out/#<NO>_howto.mp4 -c:v copy -af "loudnorm=I=-14:TP=-1.5:LRA=7" -c:a aac -b:a 192k out/#<NO>_howto.norm.mp4 && mv out/#<NO>_howto.norm.mp4 out/#<NO>_howto.mp4
    python3 scripts/qa_check.py --video out/#<NO>_howto.mp4 --tier howto --frames-dir /tmp/qa_frames_<NO>_howto
    ```
-5. **ตรวจภาพ QA แบบตรงไปตรงมา (≥ 9.8/10) + อัปโหลดส่งงานขึ้น Google Drive**
+5. **ตรวจภาพ QA แบบตรงไปตรงมา (≥ 9.8/10) + สร้างโฟลเดอร์แยกตามสินค้าแล้วอัปโหลดขึ้น Google Drive**
+   - **ห้ามอัพโหลดไฟล์ปนกันในโฟลเดอร์หลัก** — ให้สร้างโฟลเดอร์ย่อยชื่อ **`#<NO>_<ชื่อสินค้า>`** ภายใต้ `Affiliate Motion` (`1MV3E8bIRQu775rHGnlPJVW_GnriNOedW`) ก่อนเสมอ แล้วค่อยอัปโหลดไฟล์ทั้งหมดของสินค้านั้นเข้าไปในโฟลเดอร์ย่อย:
    ```bash
-   gdrive mutate upload out/#<NO>_short.mp4 --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW
-   gdrive mutate upload out/#<NO>_howto.mp4 --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW
-   gdrive mutate upload out/#<NO>_cover.jpg --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW
+   gdrive mutate mkdir "#<NO>_<ชื่อสินค้า>" --parent 1MV3E8bIRQu775rHGnlPJVW_GnriNOedW
+   gdrive mutate upload out/#<NO>_short.mp4 --parent <SUBFOLDER_ID>
+   gdrive mutate upload out/#<NO>_howto.mp4 --parent <SUBFOLDER_ID>
+   gdrive mutate upload out/#<NO>_cover.jpg --parent <SUBFOLDER_ID>
+   gdrive mutate upload data/publish_pack_<NO>.md --parent <SUBFOLDER_ID>
    ```
