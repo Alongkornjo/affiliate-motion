@@ -285,8 +285,8 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
         </div>
       )}
 
-      {/* Scene 1 Full-Bleed 9:16 Commercial Hero Layer */}
-      {isHero && props.heroFullBleedImage && (
+      {/* Full-Bleed 9:16 Commercial Layer Across All 4 Scenes */}
+      {(isHero ? (props.heroFullBleedImage || currentImg) : currentImg) && (
         <div
           style={{
             position: 'absolute',
@@ -297,27 +297,27 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           }}
         >
           <Img
-            src={staticFile(props.heroFullBleedImage)}
+            src={staticFile(isHero && props.heroFullBleedImage ? props.heroFullBleedImage : currentImg)}
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: 'center 56%',
-              transform: `scale(${heroScale})`,
-              transformOrigin: '50% 62%',
+              objectPosition: isHero ? 'center 56%' : 'center center',
+              transform: `scale(${isHero ? heroScale : kenBurnsScale})`,
+              transformOrigin: isHero ? '50% 62%' : '50% 50%',
             }}
           />
-          {/* Soft Top & Bottom Vignettes so Headline and Mascot/Captions pop cleanly */}
+          {/* Subtle Top & Bottom Gradient Scrims so Headlines, Chips, and Captions pop cleanly */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
-              height: '28%',
+              height: '30%',
               background: theme.isDark
                 ? 'linear-gradient(180deg, rgba(11,17,32,0.75) 0%, transparent 100%)'
-                : 'linear-gradient(180deg, rgba(255,244,247,0.78) 0%, rgba(255,244,247,0.3) 65%, transparent 100%)',
+                : 'linear-gradient(180deg, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.16) 65%, transparent 100%)',
             }}
           />
           <div
@@ -326,10 +326,10 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               bottom: 0,
               left: 0,
               right: 0,
-              height: '38%',
+              height: '42%',
               background: theme.isDark
-                ? 'linear-gradient(0deg, rgba(11,17,32,0.82) 0%, transparent 100%)'
-                : 'linear-gradient(0deg, rgba(255,244,247,0.88) 0%, rgba(255,244,247,0.45) 55%, transparent 100%)',
+                ? 'linear-gradient(0deg, rgba(11,17,32,0.85) 0%, transparent 100%)'
+                : 'linear-gradient(0deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.26) 55%, transparent 100%)',
             }}
           />
         </div>
@@ -483,7 +483,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
           );
         })()}
 
-        {/* Center Visual Stage: Full-Bleed Hero Strip vs Feature Grid vs Spotlight */}
+        {/* Center Visual Stage: Full-Bleed Overlays Across All 4 Scenes */}
         <div
           style={{
             position: 'relative',
@@ -493,7 +493,7 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: isHero ? 'flex-start' : 'center',
+            justifyContent: isHero ? 'flex-start' : 'flex-end',
             gap: 14,
           }}
         >
@@ -566,154 +566,79 @@ export const ProductClip: React.FC<ProductClipProps> = (props) => {
               )}
             </div>
           ) : (
-            <>
-              {/* Scene 1 (Fallback Boxed Mode): Tilted Side Collage Cards behind Main Card */}
-              {isHero && images.length > 1 && (
-                <>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      left: -8,
-                      width: 240,
-                      height: 300,
-                      borderRadius: 26,
-                      overflow: 'hidden',
-                      border: `2px solid ${theme.surfaceBorder}`,
-                      boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
-                      transform: `rotate(-8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
-                      zIndex: 5,
-                    }}
-                  >
-                    <ProductStageImage src={sideLeftImg} zoom={1.0} />
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      right: -8,
-                      width: 240,
-                      height: 300,
-                      borderRadius: 26,
-                      overflow: 'hidden',
-                      border: `2px solid ${theme.surfaceBorder}`,
-                      boxShadow: '0 14px 32px rgba(0,0,0,0.22)',
-                      transform: `rotate(8deg) scale(${interpolate(sideCardSpring, [0, 1], [0.7, 1])})`,
-                      zIndex: 5,
-                    }}
-                  >
-                    <ProductStageImage src={sideRightImg} zoom={1.0} />
-                  </div>
-                </>
-              )}
-
-              {/* Main Center Product Frame (Full-Width Balanced across Scenes 2, 3, and 4) */}
-              <div
-                style={{
-                  position: 'relative',
-                  width: isHero && images.length > 1 ? '76%' : '100%',
-                  maxWidth: '100%',
-                  flex: isGrid || isCta || (isSpotlight && props.decisionHelper) ? 1 : undefined,
-                  minHeight: 0,
-                  height:
-                    isGrid || isCta || (isSpotlight && props.decisionHelper)
-                      ? undefined
-                      : '100%',
-                  borderRadius: 32,
-                  overflow: 'hidden',
-                  backgroundColor: theme.surface,
-                  border: `2px solid ${theme.surfaceBorder}`,
-                  boxShadow: '0 22px 48px rgba(0, 0, 0, 0.18)',
-                  opacity: interpolate(sceneEnter, [0, 1], [0.35, 1]),
-                  transform: `translateY(${floatY + interpolate(sceneEnter, [0, 1], [18, 0])}px) scale(${interpolate(sceneEnter, [0, 1], [0.97, 1])})`,
-                  zIndex: 10,
-                }}
-              >
-                {currentImg && (
-                  <ProductStageImage
-                    src={currentImg}
-                    zoom={isSpotlight ? kenBurnsScale * 1.015 : kenBurnsScale}
-                    fit={
-                      (isGrid && currentImg.includes('products/')) ||
-                      isCta ||
-                      (isSpotlight && currentImg.includes('products/'))
-                        ? 'cover'
-                        : 'contain'
-                    }
-                  />
-                )}
-
-                {/* Scene 3: Interactive Live Swatch Callout Ring + Badge strictly on Swatch Chart before spotMid */}
-                {isSpotlight &&
-                  frame < spotMid &&
-                  props.swatchHighlights &&
-                  props.swatchHighlights.map((sw, swIdx) => {
-                    const isSwActive = currentTime >= sw.startSec && currentTime <= sw.endSec;
-                    if (!isSwActive) return null;
-                    const pulse = 1 + Math.sin(frame / 4) * 0.08;
-                    return (
+            <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: 0 }}>
+              {/* Scene 3: Interactive Live Swatch Callout Ring + Badge over Full-Bleed Stage before spotMid */}
+              {isSpotlight &&
+                frame < spotMid &&
+                props.swatchHighlights &&
+                props.swatchHighlights.map((sw, swIdx) => {
+                  const isSwActive = currentTime >= sw.startSec && currentTime <= sw.endSec;
+                  if (!isSwActive) return null;
+                  const pulse = 1 + Math.sin(frame / 4) * 0.08;
+                  return (
+                    <div
+                      key={`sw-pin-${swIdx}`}
+                      style={{
+                        position: 'absolute',
+                        left: `${sw.xPct}%`,
+                        top: `${sw.yPct}%`,
+                        transform: `translate(-50%, -50%) scale(${pulse})`,
+                        zIndex: 18,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        pointerEvents: 'none',
+                      }}
+                    >
                       <div
-                        key={`sw-pin-${swIdx}`}
                         style={{
-                          position: 'absolute',
-                          left: `${sw.xPct}%`,
-                          top: `${sw.yPct}%`,
-                          transform: `translate(-50%, -50%) scale(${pulse})`,
-                          zIndex: 18,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          pointerEvents: 'none',
+                          width: 64,
+                          height: 64,
+                          borderRadius: '50%',
+                          border: '4px solid #FFFFFF',
+                          boxShadow: `0 0 0 4px ${sw.hex}, 0 10px 22px rgba(0,0,0,0.35)`,
+                          backgroundColor: 'transparent',
+                        }}
+                      />
+                      <div
+                        style={{
+                          marginTop: 8,
+                          background: theme.ctaGradient,
+                          color: '#FFFFFF',
+                          padding: '5px 14px',
+                          borderRadius: 999,
+                          fontSize: 21,
+                          fontWeight: 800,
+                          whiteSpace: 'nowrap',
+                          boxShadow: '0 8px 20px rgba(0,0,0,0.28)',
+                          border: '2px solid #FFFFFF',
                         }}
                       >
-                        <div
-                          style={{
-                            width: 64,
-                            height: 64,
-                            borderRadius: '50%',
-                            border: '4px solid #FFFFFF',
-                            boxShadow: `0 0 0 4px ${sw.hex}, 0 10px 22px rgba(0,0,0,0.35)`,
-                            backgroundColor: 'transparent',
-                          }}
-                        />
-                        <div
-                          style={{
-                            marginTop: 8,
-                            background: theme.ctaGradient,
-                            color: '#FFFFFF',
-                            padding: '5px 14px',
-                            borderRadius: 999,
-                            fontSize: 21,
-                            fontWeight: 800,
-                            whiteSpace: 'nowrap',
-                            boxShadow: '0 8px 20px rgba(0,0,0,0.28)',
-                            border: '2px solid #FFFFFF',
-                          }}
-                        >
-                          {sw.label}
-                        </div>
+                        {sw.label}
                       </div>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
 
-                {discount > 0 && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 20,
-                      right: 20,
-                      backgroundColor: theme.accent,
-                      color: '#111827',
-                      padding: '8px 20px',
-                      borderRadius: 999,
-                      fontSize: 26,
-                      fontWeight: 800,
-                      boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
-                    }}
-                  >
-                    ลด {discount}%
-                  </div>
-                )}
-              </div>
-            </>
+              {discount > 0 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 12,
+                    right: 12,
+                    backgroundColor: theme.accent,
+                    color: '#111827',
+                    padding: '8px 20px',
+                    borderRadius: 999,
+                    fontSize: 26,
+                    fontWeight: 800,
+                    boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  ลด {discount}%
+                </div>
+              )}
+            </div>
           )}
 
           {/* Scene 3: Interactive Shade Decision Helper Chips (or Fallback Pill) */}
