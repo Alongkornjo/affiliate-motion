@@ -1,0 +1,81 @@
+{
+  "no": "132_howto",
+  "product_name": "วิธีใช้และดูแลผ้าห่มเย็น Konvy Cool-Summer Quilt (3 ขั้นตอน)",
+  "category": "เครื่องนอน / ของใช้ในบ้าน",
+  "price": 0,
+  "affiliate_link": "https://s.shopee.co.th/6L5uJXfSev",
+  "hook_text": "วิธีใช้และดูแลผ้าห่มเย็น\nให้เย็นฉ่ำ นุ่มทนนาน 3 ขั้นตอน!",
+  "brand_label": "KONVY  ·  HOW-TO 3 ขั้นตอน",
+  "grid_headline": "3 ขั้นตอนใช้ง่าย! เย็นสบายทนนาน ✨",
+  "target_pain": "ซักผิดวิธีกลัวผ้าเสีย ไม่เย็น หรืออับชื้น",
+  "key_points": [
+    "ขั้นที่ 1: ห่มได้ทันที เส้นใยธรรมชาติ ระบายอากาศดี",
+    "ขั้นที่ 2: ซักเครื่องได้ในน้ำอุณหภูมิไม่เกิน 30 องศา",
+    "ขั้นที่ 3: ห้ามใช้ผลิตภัณฑ์ฟอกขาว ถนอมผ้านุ่มลื่น"
+  ],
+  "spotlight_title": "4 สีพาสเทลนุ่มละมุน เลือกแมทช์เตียง ❄️",
+  "decision_helper": "✨ ขนาด 150×200 ซม. · 90% Nylon · 10% Spandex",
+  "how_to_steps": [
+    "ห่มเย็นสบาย",
+    "ซักไม่เกิน 30°C",
+    "ห้ามฟอกขาว!"
+  ],
+  "cta_headline": "ดูแลง่าย หลับสบายทั้งคืน! ❄️",
+  "cta_text": "กดเลือกสีที่ชอบจากตะกร้าด้านล่างเลย!",
+  "themeId": "clean_pastel",
+  "layoutVariant": "feature_carousel",
+  "mascotId": "star_bear",
+  "custom_accent": "#3B9AE1",
+  "staged_images": [
+    "products/132/family_cozy.jpg",
+    "products/132/bed_ice_clean.jpg",
+    "products/132/colors_4grid.jpg",
+    "products/132/grid_clean.jpg",
+    "products/132/hero_callout.jpg",
+    "products/132/family_cozy.jpg",
+    "products/132/bed_ice_clean.jpg"
+  ],
+  "hero_fullbleed_image": "products/132/hero_fullbleed.jpg",
+  "hero_callout_image": "products/132/hero_callout.jpg",
+  "hero_callout_label": "ซักเครื่องได้ ถนอมง่าย 🧺",
+  "hero_badges": [
+    "1️⃣ ห่มเย็นสบาย",
+    "2️⃣ ซักไม่เกิน 30°C",
+    "3️⃣ ห้ามฟอกขาว"
+  ],
+  "swatch_highlights": [
+    {
+      "label": "ฟ้า-เทา",
+      "hex": "#7EC8E3",
+      "xPct": 27.0,
+      "yPct": 27.0,
+      "startSec": 12.0,
+      "endSec": 14.0
+    },
+    {
+      "label": "ม่วง-เทา",
+      "hex": "#B79CED",
+      "xPct": 73.0,
+      "yPct": 27.0,
+      "startSec": 14.0,
+      "endSec": 16.0
+    },
+    {
+      "label": "ชมพู-เหลือง",
+      "hex": "#F4A9B8",
+      "xPct": 27.0,
+      "yPct": 73.0,
+      "startSec": 16.0,
+      "endSec": 18.0
+    },
+    {
+      "label": "เขียว-ชมพู",
+      "hex": "#A8C69F",
+      "xPct": 73.0,
+      "yPct": 73.0,
+      "startSec": 18.0,
+      "endSec": 19.8
+    }
+  ],
+  "narration_short": "วิธีใช้และดูแลผ้าห่มเย็น คอนวี่ คูลซัมเมอร์ ควิลท์ ให้เย็นสบายทนนาน ง่ายๆ แค่สามขั้นตอน. ขั้นที่หนึ่ง นำไปห่มได้เลย ตัวผ้าเส้นใยธรรมชาติ ระบายอากาศดี บุคอตตอนนุ่มลื่น ปลอดภัยต่อเด็กและกันไรฝุ่น. ขั้นที่สอง ซักเครื่องได้ในน้ำอุณหภูมิไม่เกินสามสิบองศา. ขั้นที่สาม ห้ามใช้ผลิตภัณฑ์ฟอกขาว เพื่อถนอมเส้นใยให้เย็นนุ่มเหมือนใหม่. มีสี่สีพาสเทลให้เลือก กดดูสินค้าจากตะกร้าได้เลย."
+}
