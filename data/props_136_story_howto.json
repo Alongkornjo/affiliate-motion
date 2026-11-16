@@ -1,0 +1,887 @@
+{
+  "no": "136_howto",
+  "productName": "PowerBank แท้ 30000mAh ชาร์จเร็ว PD66W QC3.0 มีสายในตัว",
+  "themeId": "modern_tech",
+  "customAccent": "#38BDF8",
+  "hookBadge": "❌ ปัญหาคนพกพาวเวอร์แบงค์",
+  "hookHeadline": "ลืมสายชาร์จ สายพันกัน?",
+  "hookSub": "แก้จบใน 3 ขั้นตอน! ⚡",
+  "ctaText": "🛒 กดเลือกสีขาว-ดำจากตะกร้าได้เลย!",
+  "voiceoverFile": "vo_136_howto_short.mp3",
+  "captions": [
+    {
+      "start": 0.0,
+      "end": 1.78,
+      "text": "เคยไหมออกไปข้างนอกทีไร",
+      "words": [
+        {
+          "word": "เคย",
+          "start": 0.0,
+          "end": 0.2
+        },
+        {
+          "word": "ไหม",
+          "start": 0.2,
+          "end": 0.4
+        },
+        {
+          "word": "ออก",
+          "start": 0.4,
+          "end": 1.1
+        },
+        {
+          "word": "ไป",
+          "start": 1.1,
+          "end": 1.3
+        },
+        {
+          "word": "ข้าง",
+          "start": 1.3,
+          "end": 1.4
+        },
+        {
+          "word": "นอกที",
+          "start": 1.4,
+          "end": 1.7
+        },
+        {
+          "word": "ไร",
+          "start": 1.7,
+          "end": 1.78
+        }
+      ]
+    },
+    {
+      "start": 1.78,
+      "end": 3.4,
+      "text": "แบตมือถือใกล้หมด",
+      "words": [
+        {
+          "word": "แบ",
+          "start": 1.78,
+          "end": 2.148
+        },
+        {
+          "word": "ตมือ",
+          "start": 2.148,
+          "end": 2.7
+        },
+        {
+          "word": "ถือ",
+          "start": 2.7,
+          "end": 2.78
+        },
+        {
+          "word": "ใกล้",
+          "start": 2.7,
+          "end": 3.2
+        },
+        {
+          "word": "หมด",
+          "start": 3.2,
+          "end": 3.4
+        }
+      ]
+    },
+    {
+      "start": 3.4,
+      "end": 5.3,
+      "text": "แต่ดันลืมพกสายชาร์จ",
+      "words": [
+        {
+          "word": "แต่",
+          "start": 3.4,
+          "end": 3.9
+        },
+        {
+          "word": "ดัน",
+          "start": 3.9,
+          "end": 4.2
+        },
+        {
+          "word": "ลืมพก",
+          "start": 4.2,
+          "end": 4.6
+        },
+        {
+          "word": "สายชาร์จ",
+          "start": 4.6,
+          "end": 5.3
+        }
+      ]
+    },
+    {
+      "start": 5.3,
+      "end": 7.0,
+      "text": "หรือสายพันกันยุ่งเต็มกระเป๋า",
+      "words": [
+        {
+          "word": "หรือ",
+          "start": 5.3,
+          "end": 5.6
+        },
+        {
+          "word": "สาย",
+          "start": 5.6,
+          "end": 5.9
+        },
+        {
+          "word": "พัน",
+          "start": 5.9,
+          "end": 6.1
+        },
+        {
+          "word": "กัน",
+          "start": 6.1,
+          "end": 6.18
+        },
+        {
+          "word": "ยุ่ง",
+          "start": 6.1,
+          "end": 6.4
+        },
+        {
+          "word": "เต็ม",
+          "start": 6.4,
+          "end": 6.6
+        },
+        {
+          "word": "กระเป๋า",
+          "start": 6.6,
+          "end": 7.0
+        }
+      ]
+    },
+    {
+      "start": 7.0,
+      "end": 10.088,
+      "text": "แก้ปัญหานี้ด้วยพาวเวอร์แบงค์สาม",
+      "words": [
+        {
+          "word": "แก้",
+          "start": 7.0,
+          "end": 7.8
+        },
+        {
+          "word": "ปัญหา",
+          "start": 7.8,
+          "end": 8.1
+        },
+        {
+          "word": "นี้",
+          "start": 8.1,
+          "end": 8.4
+        },
+        {
+          "word": "ด้วย",
+          "start": 8.4,
+          "end": 8.9
+        },
+        {
+          "word": "พาวเวอร์แบงค์",
+          "start": 8.9,
+          "end": 9.833
+        },
+        {
+          "word": "สาม",
+          "start": 9.833,
+          "end": 10.088
+        }
+      ]
+    },
+    {
+      "start": 10.088,
+      "end": 12.1,
+      "text": "หมื่นมิลลิแอมป์ที่มีสายชาร์จในตัว",
+      "words": [
+        {
+          "word": "หมื่น",
+          "start": 10.088,
+          "end": 10.342
+        },
+        {
+          "word": "มิลลิแอมป์",
+          "start": 10.342,
+          "end": 10.936
+        },
+        {
+          "word": "ที่มี",
+          "start": 10.936,
+          "end": 11.106
+        },
+        {
+          "word": "สายชาร์จ",
+          "start": 11.106,
+          "end": 11.7
+        },
+        {
+          "word": "ใน",
+          "start": 11.7,
+          "end": 12.0
+        },
+        {
+          "word": "ตัว",
+          "start": 12.0,
+          "end": 12.1
+        }
+      ]
+    },
+    {
+      "start": 12.1,
+      "end": 15.008,
+      "text": "ขั้นที่หนึ่งแค่ดึงสายในตัวออกมา",
+      "words": [
+        {
+          "word": "ขั้น",
+          "start": 12.1,
+          "end": 12.9
+        },
+        {
+          "word": "ที่",
+          "start": 12.9,
+          "end": 13.1
+        },
+        {
+          "word": "หนึ่ง",
+          "start": 13.1,
+          "end": 13.486
+        },
+        {
+          "word": "แค่",
+          "start": 13.486,
+          "end": 13.743
+        },
+        {
+          "word": "ดึง",
+          "start": 13.743,
+          "end": 14.0
+        },
+        {
+          "word": "สาย",
+          "start": 14.0,
+          "end": 14.4
+        },
+        {
+          "word": "ใน",
+          "start": 14.4,
+          "end": 14.5
+        },
+        {
+          "word": "ตัว",
+          "start": 14.5,
+          "end": 14.7
+        },
+        {
+          "word": "ออกมา",
+          "start": 14.7,
+          "end": 15.008
+        }
+      ]
+    },
+    {
+      "start": 15.008,
+      "end": 18.14,
+      "text": "เสียบชาร์จได้ทันทีทั้งไทป์ซีและไอ",
+      "words": [
+        {
+          "word": "เสียบชาร์จ",
+          "start": 15.008,
+          "end": 15.5
+        },
+        {
+          "word": "ได้",
+          "start": 15.5,
+          "end": 15.7
+        },
+        {
+          "word": "ทันที",
+          "start": 15.7,
+          "end": 16.205
+        },
+        {
+          "word": "ทั้งไทป์",
+          "start": 16.205,
+          "end": 17.047
+        },
+        {
+          "word": "ซี",
+          "start": 17.047,
+          "end": 17.3
+        },
+        {
+          "word": "และ",
+          "start": 17.3,
+          "end": 17.9
+        },
+        {
+          "word": "ไอ",
+          "start": 17.9,
+          "end": 18.14
+        }
+      ]
+    },
+    {
+      "start": 18.14,
+      "end": 19.7,
+      "text": "โฟนไม่ต้องพกสายแยก",
+      "words": [
+        {
+          "word": "โฟน",
+          "start": 18.14,
+          "end": 18.5
+        },
+        {
+          "word": "ไม่",
+          "start": 18.5,
+          "end": 18.8
+        },
+        {
+          "word": "ต้อง",
+          "start": 18.8,
+          "end": 19.0
+        },
+        {
+          "word": "พก",
+          "start": 19.0,
+          "end": 19.2
+        },
+        {
+          "word": "สาย",
+          "start": 19.2,
+          "end": 19.5
+        },
+        {
+          "word": "แยก",
+          "start": 19.5,
+          "end": 19.7
+        }
+      ]
+    },
+    {
+      "start": 19.7,
+      "end": 20.7,
+      "text": "ขั้นที่สอง",
+      "words": [
+        {
+          "word": "ขั้น",
+          "start": 19.7,
+          "end": 20.4
+        },
+        {
+          "word": "ที่",
+          "start": 20.4,
+          "end": 20.5
+        },
+        {
+          "word": "สอง",
+          "start": 20.5,
+          "end": 20.7
+        }
+      ]
+    },
+    {
+      "start": 20.7,
+      "end": 22.9,
+      "text": "ชาร์จพร้อมกันได้สูงสุดสี่เครื่อง",
+      "words": [
+        {
+          "word": "ชาร์จ",
+          "start": 20.7,
+          "end": 21.2
+        },
+        {
+          "word": "พร้อม",
+          "start": 21.2,
+          "end": 21.6
+        },
+        {
+          "word": "กัน",
+          "start": 21.6,
+          "end": 21.7
+        },
+        {
+          "word": "ได้",
+          "start": 21.7,
+          "end": 21.8
+        },
+        {
+          "word": "สูงสุด",
+          "start": 21.8,
+          "end": 22.309
+        },
+        {
+          "word": "สี่",
+          "start": 22.309,
+          "end": 22.5
+        },
+        {
+          "word": "เครื่อง",
+          "start": 22.5,
+          "end": 22.9
+        }
+      ]
+    },
+    {
+      "start": 22.9,
+      "end": 25.3,
+      "text": "จ่ายไฟเร็วพีดีหกสิบหกวัตต์",
+      "words": [
+        {
+          "word": "จ่าย",
+          "start": 22.9,
+          "end": 23.6
+        },
+        {
+          "word": "ไฟ",
+          "start": 23.6,
+          "end": 23.7
+        },
+        {
+          "word": "เร็ว",
+          "start": 23.7,
+          "end": 24.043
+        },
+        {
+          "word": "พีดี",
+          "start": 24.043,
+          "end": 24.271
+        },
+        {
+          "word": "หก",
+          "start": 24.271,
+          "end": 24.5
+        },
+        {
+          "word": "สิบหกวัตต์",
+          "start": 24.5,
+          "end": 25.3
+        }
+      ]
+    },
+    {
+      "start": 25.3,
+      "end": 28.069,
+      "text": "พร้อมจอแอลอีดีบอกเปอร์เซ็นต์แบต",
+      "words": [
+        {
+          "word": "พร้อม",
+          "start": 25.3,
+          "end": 25.7
+        },
+        {
+          "word": "จอ",
+          "start": 25.7,
+          "end": 26.0
+        },
+        {
+          "word": "แอลอี",
+          "start": 26.0,
+          "end": 26.424
+        },
+        {
+          "word": "ดี",
+          "start": 26.424,
+          "end": 26.584
+        },
+        {
+          "word": "บอกเปอร์",
+          "start": 26.584,
+          "end": 27.327
+        },
+        {
+          "word": "เซ็นต์",
+          "start": 27.327,
+          "end": 27.751
+        },
+        {
+          "word": "แบต",
+          "start": 27.751,
+          "end": 28.069
+        }
+      ]
+    },
+    {
+      "start": 28.069,
+      "end": 29.6,
+      "text": "ชัดเจนขั้นที่สาม",
+      "words": [
+        {
+          "word": "ชัดเจน",
+          "start": 28.069,
+          "end": 28.6
+        },
+        {
+          "word": "ขั้น",
+          "start": 28.6,
+          "end": 29.2
+        },
+        {
+          "word": "ที่",
+          "start": 29.2,
+          "end": 29.3
+        },
+        {
+          "word": "สาม",
+          "start": 29.3,
+          "end": 29.6
+        }
+      ]
+    },
+    {
+      "start": 29.6,
+      "end": 32.6,
+      "text": "ตัวเครื่องบางแค่สิบแปดมิลลิเมตร",
+      "words": [
+        {
+          "word": "ตัว",
+          "start": 29.6,
+          "end": 29.8
+        },
+        {
+          "word": "เครื่อง",
+          "start": 29.8,
+          "end": 30.6
+        },
+        {
+          "word": "บาง",
+          "start": 30.6,
+          "end": 30.8
+        },
+        {
+          "word": "แค่",
+          "start": 30.8,
+          "end": 31.5
+        },
+        {
+          "word": "สิบ",
+          "start": 31.5,
+          "end": 31.683
+        },
+        {
+          "word": "แปด",
+          "start": 31.683,
+          "end": 31.958
+        },
+        {
+          "word": "มิลลิเมตร",
+          "start": 31.958,
+          "end": 32.6
+        }
+      ]
+    },
+    {
+      "start": 32.6,
+      "end": 33.9,
+      "text": "ผ่านมาตรฐานมอก",
+      "words": [
+        {
+          "word": "ผ่าน",
+          "start": 32.6,
+          "end": 33.0
+        },
+        {
+          "word": "มาตร",
+          "start": 33.0,
+          "end": 33.36
+        },
+        {
+          "word": "ฐาน",
+          "start": 33.36,
+          "end": 33.63
+        },
+        {
+          "word": "มอก",
+          "start": 33.63,
+          "end": 33.9
+        }
+      ]
+    },
+    {
+      "start": 33.9,
+      "end": 37.8,
+      "text": "และสามซีพกขึ้นเครื่องบินได้สบาย",
+      "words": [
+        {
+          "word": "และ",
+          "start": 33.9,
+          "end": 35.3
+        },
+        {
+          "word": "สามซี",
+          "start": 35.3,
+          "end": 36.1
+        },
+        {
+          "word": "พก",
+          "start": 36.1,
+          "end": 36.7
+        },
+        {
+          "word": "ขึ้น",
+          "start": 36.7,
+          "end": 36.8
+        },
+        {
+          "word": "เครื่อง",
+          "start": 36.8,
+          "end": 36.9
+        },
+        {
+          "word": "บิน",
+          "start": 36.9,
+          "end": 37.2
+        },
+        {
+          "word": "ได้",
+          "start": 37.2,
+          "end": 37.3
+        },
+        {
+          "word": "สบาย",
+          "start": 37.3,
+          "end": 37.8
+        }
+      ]
+    },
+    {
+      "start": 37.8,
+      "end": 40.1,
+      "text": "จากกระเป๋าสายพันกัน",
+      "words": [
+        {
+          "word": "จาก",
+          "start": 37.8,
+          "end": 38.9
+        },
+        {
+          "word": "กระเป๋า",
+          "start": 38.9,
+          "end": 39.2
+        },
+        {
+          "word": "สาย",
+          "start": 39.2,
+          "end": 39.6
+        },
+        {
+          "word": "พัน",
+          "start": 39.6,
+          "end": 39.8
+        },
+        {
+          "word": "กัน",
+          "start": 39.8,
+          "end": 40.1
+        }
+      ]
+    },
+    {
+      "start": 40.1,
+      "end": 41.6,
+      "text": "กลายเป็นพกเครื่องเดียวจบ",
+      "words": [
+        {
+          "word": "กลาย",
+          "start": 40.1,
+          "end": 40.7
+        },
+        {
+          "word": "เป็น",
+          "start": 40.7,
+          "end": 40.8
+        },
+        {
+          "word": "พก",
+          "start": 40.8,
+          "end": 40.9
+        },
+        {
+          "word": "เครื่อง",
+          "start": 40.9,
+          "end": 41.1
+        },
+        {
+          "word": "เดียว",
+          "start": 41.1,
+          "end": 41.4
+        },
+        {
+          "word": "จบ",
+          "start": 41.4,
+          "end": 41.6
+        }
+      ]
+    },
+    {
+      "start": 41.6,
+      "end": 43.2,
+      "text": "มีให้เลือกสองสีขาวดำ",
+      "words": [
+        {
+          "word": "มี",
+          "start": 41.6,
+          "end": 42.1
+        },
+        {
+          "word": "ให้",
+          "start": 42.1,
+          "end": 42.3
+        },
+        {
+          "word": "เลือก",
+          "start": 42.3,
+          "end": 42.5
+        },
+        {
+          "word": "สองสี",
+          "start": 42.5,
+          "end": 42.811
+        },
+        {
+          "word": "ขาวดำ",
+          "start": 42.811,
+          "end": 43.2
+        }
+      ]
+    },
+    {
+      "start": 43.2,
+      "end": 44.9,
+      "text": "กดสั่งในตะกร้าได้เลย",
+      "words": [
+        {
+          "word": "กด",
+          "start": 43.2,
+          "end": 44.0
+        },
+        {
+          "word": "สั่ง",
+          "start": 44.0,
+          "end": 44.1
+        },
+        {
+          "word": "ใน",
+          "start": 44.1,
+          "end": 44.2
+        },
+        {
+          "word": "ตะกร้า",
+          "start": 44.2,
+          "end": 44.6
+        },
+        {
+          "word": "ได้",
+          "start": 44.6,
+          "end": 44.8
+        },
+        {
+          "word": "เลย",
+          "start": 44.8,
+          "end": 44.9
+        }
+      ]
+    }
+  ],
+  "durationInSec": 45.764,
+  "enableSfx": true,
+  "shots": [
+    {
+      "image": "products/136_howto/s01_prob_dark.jpg",
+      "startSec": 0.0,
+      "endSec": 3.4,
+      "phase": "problem",
+      "motion": "zoom_in"
+    },
+    {
+      "image": "products/136_howto/s02_prob_ports.jpg",
+      "startSec": 3.4,
+      "endSec": 7.0,
+      "phase": "problem",
+      "motion": "zoom_out"
+    },
+    {
+      "image": "products/136_howto/s03_solve_hero.jpg",
+      "startSec": 7.0,
+      "endSec": 12.1,
+      "phase": "solve",
+      "motion": "zoom_in",
+      "pillText": "✨ THE SOLVE",
+      "title": "30000mAh มีสายในตัว ชาร์จเร็ว 66W"
+    },
+    {
+      "image": "products/136_howto/s04_step1_tucked.jpg",
+      "startSec": 12.1,
+      "endSec": 15.01,
+      "phase": "step1",
+      "motion": "zoom_in",
+      "pillText": "1️⃣ ขั้นที่ 1 · ดึงสายในตัว",
+      "title": "ไม่ต้องพกสายแยกให้ยุ่งยาก"
+    },
+    {
+      "image": "products/136_howto/s05_step1_dual.jpg",
+      "startSec": 15.01,
+      "endSec": 19.7,
+      "phase": "step1",
+      "motion": "zoom_out",
+      "pillText": "1️⃣ ขั้นที่ 1 · เสียบชาร์จทันที",
+      "title": "ครบทั้ง Type-C และ Lightning (iOS)"
+    },
+    {
+      "image": "products/136_howto/s06_step2_ports.jpg",
+      "startSec": 19.7,
+      "endSec": 25.3,
+      "phase": "step2",
+      "motion": "zoom_in",
+      "pillText": "2️⃣ ขั้นที่ 2 · ชาร์จพร้อมกัน 4 เครื่อง",
+      "title": "จ่ายไฟเร็ว PD 66W & QC 3.0"
+    },
+    {
+      "image": "products/136_howto/s07_step2_led.jpg",
+      "startSec": 25.3,
+      "endSec": 29.6,
+      "phase": "step2",
+      "motion": "zoom_out",
+      "pillText": "2️⃣ ขั้นที่ 2 · จอ LED บอก % ชัด",
+      "title": "เช็กแบตคงเหลือได้ตลอดเวลา"
+    },
+    {
+      "image": "products/136_howto/s04_step1_tucked.jpg",
+      "startSec": 29.6,
+      "endSec": 33.9,
+      "phase": "step3",
+      "motion": "zoom_in",
+      "pillText": "3️⃣ ขั้นที่ 3 · บางเพียง 18 มม.",
+      "title": "ผ่านมาตรฐาน มอก. 2879-2560 + 3C"
+    },
+    {
+      "image": "products/136_howto/s08_step3_flight.jpg",
+      "startSec": 33.9,
+      "endSec": 37.8,
+      "phase": "step3",
+      "motion": "zoom_out",
+      "pillText": "3️⃣ ขั้นที่ 3 · นำขึ้นเครื่องบินได้",
+      "title": "พกเดินทางสบาย ปลอดภัย 7 ชั้น"
+    },
+    {
+      "image": "products/136_howto/s09_after_hero.jpg",
+      "splitBeforeImage": "products/136_howto/s01_prob_dark.jpg",
+      "beforeLabel": "BEFORE · สายพันกัน",
+      "afterLabel": "AFTER · เครื่องเดียวจบ",
+      "startSec": 37.8,
+      "endSec": 41.6,
+      "phase": "before_after",
+      "motion": "zoom_in",
+      "pillText": "✨ BEFORE vs AFTER",
+      "title": "ดูความต่างเลย!"
+    },
+    {
+      "image": "products/136_howto/s10_cta_duo.jpg",
+      "startSec": 41.6,
+      "endSec": 45.764,
+      "phase": "cta",
+      "motion": "zoom_out",
+      "pillText": "🎨 มีให้เลือก 2 สี ขาว & ดำ",
+      "title": "กดสั่งในตะกร้าได้เลย!"
+    }
+  ]
+}

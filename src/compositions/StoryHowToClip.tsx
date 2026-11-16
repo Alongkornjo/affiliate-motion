@@ -96,6 +96,11 @@ export const StoryHowToClip: React.FC<StoryHowToClipProps> = (props) => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0F172A', fontFamily: bodyFont, overflow: 'hidden' }}>
+      <style>{`
+        @font-face { font-family: 'MitrLocal'; src: url('${staticFile('fonts/Mitr-SemiBold.ttf')}') format('truetype'); font-weight: 600; font-style: normal; }
+        @font-face { font-family: 'MitrLocal'; src: url('${staticFile('fonts/Mitr-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
+        @font-face { font-family: 'MaliLocal'; src: url('${staticFile('fonts/Mali-Bold.ttf')}') format('truetype'); font-weight: 700; font-style: normal; }
+      `}</style>
       {/* Audio: Voiceover + gentle BGM */}
       {props.voiceoverFile && <Audio src={staticFile(props.voiceoverFile)} volume={1.0} />}
       {props.enableSfx !== false && (
